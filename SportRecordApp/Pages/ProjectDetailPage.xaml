@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SportRecordApp.Pages.ProjectDetailPage"
+             BackgroundColor="#FF9800"
+             Shell.NavBarIsVisible="False">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid 
+            Grid.Row="0"
+            Grid.Column="0"
+            Padding="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            
+            <Button 
+                Grid.Column="0"
+                Text="← 返回"
+                BackgroundColor="Transparent"
+                TextColor="White"
+                FontSize="16"
+                HorizontalOptions="Start"
+                Clicked="OnBackClicked" />
+            
+            <Button 
+                Grid.Column="1"
+                Text="☰"
+                BackgroundColor="Transparent"
+                TextColor="White"
+                FontSize="24"
+                HorizontalOptions="End"
+                Clicked="OnMenuClicked" />
+        </Grid>
+
+        <VerticalStackLayout 
+            Grid.Row="1"
+            Grid.Column="0"
+            Spacing="10"
+            Padding="20">
+            <Label 
+                x:Name="ProjectNameLabel"
+                FontSize="24"
+                FontAttributes="Bold"
+                TextColor="White"
+                HorizontalOptions="Center" />
+
+            <HorizontalStackLayout 
+                Spacing="20"
+                HorizontalOptions="Center">
+                <VerticalStackLayout Spacing="5">
+                    <Label 
+                        Text="目标时间"
+                        FontSize="12"
+                        TextColor="#E0E0E0"
+                        HorizontalOptions="Center" />
+                    <Label 
+                        x:Name="TargetTimeLabel"
+                        FontSize="18"
+                        TextColor="White"
+                        HorizontalOptions="Center" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="5">
+                    <Label 
+                        Text="已打卡"
+                        FontSize="12"
+                        TextColor="#E0E0E0"
+                        HorizontalOptions="Center" />
+                    <Label 
+                        x:Name="CheckInDaysLabel"
+                        FontSize="18"
+                        TextColor="White"
+                        HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+
+        <AbsoluteLayout 
+            Grid.Row="2"
+            Grid.Column="0">
+            <Label
+                x:Name="CompletionLabel"
+                Text=""
+                FontSize="18"
+                FontAttributes="Bold"
+                TextColor="#FFD700"
+                HorizontalOptions="Center"
+                AbsoluteLayout.LayoutFlags="PositionProportional"
+                AbsoluteLayout.LayoutBounds="0.5, 0.15, AutoSize, AutoSize" />
+            <Label
+                x:Name="LastCheckInTimeLabel"
+                Text=""
+                FontSize="14"
+                TextColor="#E0E0E0"
+                HorizontalOptions="Center"
+                AbsoluteLayout.LayoutFlags="PositionProportional"
+                AbsoluteLayout.LayoutBounds="0.5, 0.3, AutoSize, AutoSize" />
+            <Button
+                x:Name="CheckInButton"
+                Text="打卡"
+                FontSize="24"
+                FontAttributes="Bold"
+                TextColor="White"
+                BackgroundColor="#9C27B0"
+                WidthRequest="120"
+                HeightRequest="120"
+                CornerRadius="60"
+                Padding="0"
+                Clicked="OnCheckInClicked"
+                AbsoluteLayout.LayoutFlags="PositionProportional"
+                AbsoluteLayout.LayoutBounds="0.5, 0.5, 120, 120" />
+        </AbsoluteLayout>
+    </Grid>
+
+</ContentPage>

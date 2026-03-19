@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SportRecordApp.Pages.CheckInDetailPage"
+             BackgroundColor="#FF9800"
+             Shell.NavBarIsVisible="False">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Button 
+            Grid.Row="0"
+            Grid.Column="0"
+            Text="← 返回"
+            BackgroundColor="Transparent"
+            TextColor="White"
+            FontSize="16"
+            HorizontalOptions="Start"
+            Margin="10, 10, 0, 0"
+            Clicked="OnBackClicked" />
+
+        <VerticalStackLayout 
+            Grid.Row="1"
+            Grid.Column="0"
+            Spacing="10"
+            Padding="20">
+            <Label 
+                x:Name="ProjectNameLabel"
+                FontSize="24"
+                FontAttributes="Bold"
+                TextColor="White"
+                HorizontalOptions="Center" />
+            <Label 
+                x:Name="CheckInDaysLabel"
+                FontSize="18"
+                TextColor="#E0E0E0"
+                HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+        <CollectionView 
+            x:Name="CheckInTimesList"
+            Grid.Row="2"
+            Grid.Column="0"
+            Margin="20, 10, 20, 20">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border 
+                        BackgroundColor="White"
+                        StrokeShape="RoundRectangle 10"
+                        Padding="15"
+                        Margin="0, 0, 0, 10">
+                        <Label 
+                            Text="{Binding}"
+                            FontSize="16"
+                            TextColor="#333333"
+                            HorizontalOptions="Center" />
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+
+</ContentPage>

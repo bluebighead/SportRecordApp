@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SportRecordApp.Pages.EditProjectDialog"
+             BackgroundColor="#FF9800"
+             Title="编辑项目">
+    <VerticalStackLayout Padding="20" Spacing="20">
+        <Label 
+            Text="编辑项目" 
+            FontSize="24" 
+            FontAttributes="Bold" 
+            TextColor="White" 
+            HorizontalOptions="Center" />
+        
+        <Border 
+            x:Name="ProjectNameBorder"
+            BackgroundColor="#F5F5F5"
+            StrokeShape="RoundRectangle 10"
+            Padding="10">
+            <Entry 
+                x:Name="ProjectNameEntry" 
+                Placeholder="项目名称" 
+                FontSize="16" 
+                TextColor="Black"
+                BackgroundColor="Transparent" 
+                TextChanged="OnProjectNameTextChanged" />
+        </Border>
+        
+        <Label 
+            Text="打卡目标时间" 
+            FontSize="16" 
+            TextColor="White" />        
+        <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+            <Border 
+                x:Name="TargetTimeBorder"
+                BackgroundColor="#FFFFFF"
+                StrokeShape="RoundRectangle 10"
+                StrokeThickness="2"
+                Stroke="#E0E0E0"
+                Padding="10"
+                HeightRequest="70"
+                WidthRequest="200">
+                <Entry 
+                    x:Name="TargetTimeEntry" 
+                    Placeholder="请输入时间" 
+                    FontSize="16" 
+                    TextColor="Black"
+                    PlaceholderColor="#999999"
+                    Keyboard="Numeric" 
+                    BackgroundColor="Transparent" 
+                    TextChanged="OnTargetTimeTextChanged" />
+            </Border>
+            <Border 
+                BackgroundColor="#FFFFFF"
+                StrokeShape="RoundRectangle 10" 
+                StrokeThickness="2"
+                Stroke="#E0E0E0"
+                Padding="5"
+                HeightRequest="70"
+                WidthRequest="100">
+                <Picker 
+                    x:Name="UnitPicker" 
+                    Title="单位"
+                    FontSize="16" 
+                    TextColor="Black"
+                    TitleColor="#999999"
+                    BackgroundColor="Transparent" />
+            </Border>
+        </HorizontalStackLayout>
+        
+        <HorizontalStackLayout Spacing="20" HorizontalOptions="Center">
+            <Button 
+                x:Name="CancelButton" 
+                Text="取消" 
+                FontSize="16" 
+                BackgroundColor="#9C27B0" 
+                TextColor="White" 
+                WidthRequest="100" 
+                Clicked="OnCancelClicked" />
+            <Button 
+                x:Name="ConfirmButton" 
+                Text="确定" 
+                FontSize="16" 
+                BackgroundColor="#9C27B0" 
+                TextColor="White" 
+                WidthRequest="100" 
+                Clicked="OnConfirmClicked" />
+        </HorizontalStackLayout>
+    </VerticalStackLayout>
+</ContentPage>

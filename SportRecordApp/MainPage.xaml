@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SportRecordApp.MainPage"
+             BackgroundColor="#FF9800" 
+             Shell.NavBarIsVisible="False">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        
+        <CollectionView 
+            x:Name="ProjectList" 
+            Grid.Row="0" 
+            Grid.Column="0" 
+            Margin="20, 20, 20, 80" 
+            SelectionMode="Single" 
+            SelectionChanged="OnProjectSelected">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border 
+                        BackgroundColor="White" 
+                        StrokeShape="RoundRectangle 10" 
+                        Padding="15" 
+                        Margin="0, 0, 0, 10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <VerticalStackLayout 
+                                Grid.Column="0" 
+                                Spacing="5">
+                                <Label 
+                                    Text="{Binding Name}" 
+                                    FontSize="18" 
+                                    FontAttributes="Bold" 
+                                    TextColor="#FF9800" />
+                                <Label 
+                                    Text="{Binding TargetTime, StringFormat='目标时间: {0}'}" 
+                                    FontSize="14" 
+                                    TextColor="#666666" />
+                            </VerticalStackLayout>
+                            
+                            <VerticalStackLayout 
+                                Grid.Column="1" 
+                                VerticalOptions="Center" 
+                                Spacing="5">
+                                <Border 
+                                    BackgroundColor="#FF9800" 
+                                    StrokeShape="RoundRectangle 20" 
+                                    Padding="10, 5">
+                                    <Label 
+                                        Text="{Binding CheckInDays, StringFormat='已打卡：{0}天'}" 
+                                        FontSize="14" 
+                                        FontAttributes="Bold" 
+                                        TextColor="White" />
+                                </Border>
+                                <Label 
+                                    Text="{Binding CompletionRate}" 
+                                    FontSize="12" 
+                                    FontAttributes="Bold" 
+                                    TextColor="#4CAF50" 
+                                    HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+
+                            <Button 
+                                Grid.Column="2" 
+                                Text="⋮" 
+                                FontSize="24" 
+                                FontAttributes="Bold" 
+                                TextColor="#666666" 
+                                BackgroundColor="Transparent" 
+                                WidthRequest="40" 
+                                HeightRequest="40" 
+                                Padding="0" 
+                                Clicked="OnMenuButtonClicked" 
+                                VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        
+        <Label 
+            x:Name="NoProjectsLabel" 
+            Grid.Row="0" 
+            Grid.Column="0" 
+            Text="暂无打卡项目" 
+            FontSize="20" 
+            TextColor="White" 
+            HorizontalOptions="Center" 
+            VerticalOptions="Center" 
+            IsVisible="False" />
+        
+        <AbsoluteLayout Grid.Row="0" Grid.Column="0">
+            <Button 
+                x:Name="MenuButton" 
+                Text="☰" 
+                FontSize="36" 
+                FontAttributes="Bold" 
+                TextColor="White" 
+                BackgroundColor="#9C27B0" 
+                WidthRequest="60" 
+                HeightRequest="60" 
+                CornerRadius="30" 
+                Padding="0" 
+                Clicked="OnMenuClicked" 
+                AbsoluteLayout.LayoutFlags="PositionProportional" 
+                AbsoluteLayout.LayoutBounds="0.08, 0.92, 60, 60" />
+            <Button 
+                x:Name="AddButton" 
+                Text="+" 
+                FontSize="36" 
+                FontAttributes="Bold" 
+                TextColor="White" 
+                BackgroundColor="#9C27B0" 
+                WidthRequest="60" 
+                HeightRequest="60" 
+                CornerRadius="30" 
+                Padding="0" 
+                Clicked="OnAddButtonClicked" 
+                AbsoluteLayout.LayoutFlags="PositionProportional" 
+                AbsoluteLayout.LayoutBounds="0.92, 0.92, 60, 60" />
+        </AbsoluteLayout>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SportRecordApp.Pages.SettingsPage"
+             BackgroundColor="#FF9800"
+             Shell.NavBarIsVisible="False">
+    <VerticalStackLayout Padding="40" Spacing="30">
+        <Label 
+            Text="设置" 
+            FontSize="32" 
+            FontAttributes="Bold" 
+            TextColor="White" 
+            HorizontalOptions="Center" />
+        
+        <Border 
+            BackgroundColor="#FFFFFF" 
+            StrokeShape="RoundRectangle 10" 
+            Padding="20" 
+            Margin="0, 20, 0, 20">
+            <Grid ColumnDefinitions="*,auto" ColumnSpacing="20" VerticalOptions="Center">
+                <Label 
+                    Text="每天只可打卡一次" 
+                    FontSize="18" 
+                    TextColor="#FF9800" 
+                    VerticalOptions="Center" />
+                <Switch 
+                    x:Name="DailyCheckInSwitch" 
+                    IsToggled="True" 
+                    VerticalOptions="Center" 
+                    Toggled="OnDailyCheckInToggled" 
+                    HorizontalOptions="End" />
+            </Grid>
+        </Border>
+        
+        <Button 
+            Text="返回" 
+            FontSize="16" 
+            BackgroundColor="#9C27B0" 
+            TextColor="White" 
+            WidthRequest="120" 
+            Clicked="OnBackClicked" 
+            HorizontalOptions="Center" />
+    </VerticalStackLayout>
+</ContentPage>

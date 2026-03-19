@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SportRecordApp.Pages.AddProjectDialog"
+             BackgroundColor="Transparent">
+
+    <Grid BackgroundColor="#80000000">
+        <Border 
+            BackgroundColor="White"
+            StrokeShape="RoundRectangle 15"
+            Padding="20"
+            Margin="40"
+            HorizontalOptions="Center"
+            VerticalOptions="Center">
+            <VerticalStackLayout Spacing="20">
+                <Label 
+                    Text="添加项目"
+                    FontSize="20"
+                    FontAttributes="Bold"
+                    TextColor="#FF9800"
+                    HorizontalOptions="Center" />
+
+                <Border 
+                    x:Name="ProjectNameBorder"
+                    BackgroundColor="#F5F5F5"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="10">
+                    <Entry 
+                        x:Name="ProjectNameEntry"
+                        Placeholder="项目名称"
+                        PlaceholderColor="#999999"
+                        TextColor="#333333"
+                        BackgroundColor="Transparent"
+                        TextChanged="OnProjectNameTextChanged" />
+                </Border>
+
+                <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
+                    <Border 
+                        x:Name="TargetTimeBorder"
+                        BackgroundColor="#F5F5F5"
+                        StrokeShape="RoundRectangle 8"
+                        Padding="10"
+                        Grid.Column="0">
+                        <Entry 
+                            x:Name="TargetTimeEntry"
+                            Placeholder="时间"
+                            PlaceholderColor="#999999"
+                            TextColor="#333333"
+                            BackgroundColor="Transparent"
+                            Keyboard="Numeric"
+                            TextChanged="OnTargetTimeTextChanged" />
+                    </Border>
+
+                    <Border 
+                        BackgroundColor="#F5F5F5"
+                        StrokeShape="RoundRectangle 8"
+                        Padding="5"
+                        Grid.Column="1">
+                        <Picker 
+                            x:Name="UnitPicker"
+                            BackgroundColor="Transparent"
+                            TextColor="#333333"
+                            Title="单位" />
+                    </Border>
+                </Grid>
+
+                <HorizontalStackLayout Spacing="15" HorizontalOptions="Center">
+                    <Button 
+                        x:Name="CancelButton"
+                        Text="取消"
+                        BackgroundColor="#CCCCCC"
+                        TextColor="White"
+                        CornerRadius="8"
+                        WidthRequest="100"
+                        Clicked="OnCancelClicked" />
+
+                    <Button 
+                        x:Name="ConfirmButton"
+                        Text="确定"
+                        BackgroundColor="#9C27B0"
+                        TextColor="White"
+                        CornerRadius="8"
+                        WidthRequest="100"
+                        Clicked="OnConfirmClicked" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
+
+</ContentPage>
