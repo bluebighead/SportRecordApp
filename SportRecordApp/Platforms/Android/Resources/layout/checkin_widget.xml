@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@drawable/widget_background_small"
-    android:padding="16dp"
-    android:gravity="center">
+    android:padding="16dp">
     
     <TextView
         android:id="@+id/widget_title"
@@ -16,7 +14,8 @@
         android:textColor="#FFFFFF"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:layout_marginBottom="8dp" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp" />
     
     <TextView
         android:id="@+id/widget_project_name"
@@ -25,7 +24,9 @@
         android:text="选择项目"
         android:textColor="#FFFFFF"
         android:textSize="14sp"
-        android:layout_marginBottom="12dp" />
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/widget_title"
+        android:layout_marginTop="8dp" />
     
     <TextView
         android:id="@+id/widget_checkin_count"
@@ -34,7 +35,9 @@
         android:text="已打卡: 0 次"
         android:textColor="#FFFFFF"
         android:textSize="12sp"
-        android:layout_marginBottom="12dp" />
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/widget_project_name"
+        android:layout_marginTop="8dp" />
     
     <Button
         android:id="@+id/widget_checkin_button"
@@ -46,6 +49,10 @@
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
         android:paddingTop="8dp"
-        android:paddingBottom="8dp" />
+        android:paddingBottom="8dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/widget_checkin_count"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp" />
         
-</LinearLayout>
+</RelativeLayout>

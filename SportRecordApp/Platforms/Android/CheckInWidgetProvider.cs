@@ -8,6 +8,7 @@ using SportRecordApp.Services;
 using System.IO;
 using Microsoft.Maui.Storage;
 using Android.OS;
+using Android.Runtime;
 
 namespace SportRecordApp.Platforms.Android;
 
@@ -19,7 +20,56 @@ public class CheckInWidgetProvider : AppWidgetProvider
     private const string ActionCheckIn = "com.companyname.sportrecordapp.CHECKIN";
     private const string ActionRefresh = "com.companyname.sportrecordapp.REFRESH";
     private const string ActionOpenApp = "com.companyname.sportrecordapp.OPEN_APP";
+    private const string ActionAutoRefresh = "com.companyname.sportrecordapp.AUTO_REFRESH";
     private const string PreferencesKey = "widget_selected_project";
+    private const long RefreshInterval = 2000; // 2秒
+
+    public override void OnEnabled(Context? context)
+    {
+        base.OnEnabled(context);
+        if (context != null)
+        {
+            StartAutoRefresh(context);
+        }
+    }
+
+    public override void OnDisabled(Context? context)
+    {
+        base.OnDisabled(context);
+        if (context != null)
+        {
+            StopAutoRefresh(context);
+        }
+    }
+
+    private void StartAutoRefresh(Context context)
+    {
+        var alarmManager = context.GetSystemService(Context.AlarmService) as AlarmManager;
+        if (alarmManager != null)
+        {
+            var intent = new Intent(context, typeof(CheckInWidgetProvider));
+            intent.SetAction(ActionAutoRefresh);
+            var pendingIntent = PendingIntent.GetBroadcast(context, 0, intent, PendingIntentFlags.UpdateCurrent | PendingIntentFlags.Immutable);
+            
+            alarmManager.SetRepeating(
+                AlarmType.Rtc,
+                Java.Lang.JavaSystem.CurrentTimeMillis() + RefreshInterval,
+                RefreshInterval,
+                pendingIntent);
+        }
+    }
+
+    private void StopAutoRefresh(Context context)
+    {
+        var alarmManager = context.GetSystemService(Context.AlarmService) as AlarmManager;
+        if (alarmManager != null)
+        {
+            var intent = new Intent(context, typeof(CheckInWidgetProvider));
+            intent.SetAction(ActionAutoRefresh);
+            var pendingIntent = PendingIntent.GetBroadcast(context, 0, intent, PendingIntentFlags.UpdateCurrent | PendingIntentFlags.Immutable);
+            alarmManager.Cancel(pendingIntent);
+        }
+    }
 
     public override void OnUpdate(Context? context, AppWidgetManager? appWidgetManager, int[]? appWidgetIds)
     {
@@ -111,6 +161,22 @@ public class CheckInWidgetProvider : AppWidgetProvider
                 if (appWidgetManager != null)
                 {
                     UpdateWidget(context, appWidgetManager, appWidgetId);
+                }
+            }
+        }
+        else if (intent.Action == ActionAutoRefresh)
+        {
+            var appWidgetManager = AppWidgetManager.GetInstance(context);
+            if (appWidgetManager != null)
+            {
+                var componentName = new ComponentName(context, Java.Lang.Class.FromType(typeof(CheckInWidgetProvider)));
+                var appWidgetIds = appWidgetManager.GetAppWidgetIds(componentName);
+                if (appWidgetIds != null && appWidgetIds.Length > 0)
+                {
+                    foreach (int appWidgetId in appWidgetIds)
+                    {
+                        UpdateWidget(context, appWidgetManager, appWidgetId);
+                    }
                 }
             }
         }

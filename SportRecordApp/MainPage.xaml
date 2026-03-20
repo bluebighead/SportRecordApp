@@ -12,91 +12,96 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         
-        <CollectionView 
-            x:Name="ProjectList" 
+        <RefreshView 
+            x:Name="ProjectRefreshView"
             Grid.Row="0" 
-            Grid.Column="0" 
-            Margin="20, 20, 20, 80" 
-            SelectionMode="Single" 
-            SelectionChanged="OnProjectSelected">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Border 
-                        BackgroundColor="White" 
-                        StrokeShape="RoundRectangle 10" 
-                        Padding="15" 
-                        Margin="0, 0, 0, 10">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            
-                            <VerticalStackLayout 
-                                Grid.Column="0" 
-                                Spacing="5">
-                                <Label 
-                                    Text="{Binding Name}" 
-                                    FontSize="18" 
-                                    FontAttributes="Bold" 
-                                    TextColor="#FF9800" />
-                                <Label 
-                                    Text="{Binding TargetTime, StringFormat='目标时间: {0}'}" 
-                                    FontSize="14" 
-                                    TextColor="#666666" />
-                            </VerticalStackLayout>
-                            
-                            <VerticalStackLayout 
-                                Grid.Column="1" 
-                                VerticalOptions="Center" 
-                                Spacing="5">
-                                <Border 
-                                    BackgroundColor="#FF9800" 
-                                    StrokeShape="RoundRectangle 20" 
-                                    Padding="10, 5">
-                                    <Label 
-                                        Text="{Binding CheckInDays, StringFormat='已打卡：{0}天'}" 
-                                        FontSize="14" 
-                                        FontAttributes="Bold" 
-                                        TextColor="White" />
-                                </Border>
-                                <Label 
-                                    Text="{Binding CompletionRate}" 
-                                    FontSize="12" 
-                                    FontAttributes="Bold" 
-                                    TextColor="#4CAF50" 
-                                    HorizontalOptions="Center" />
-                            </VerticalStackLayout>
+            Grid.Column="0"
+            IsRefreshing="False"
+            Refreshing="OnRefreshing">
+            <Grid>
+                <CollectionView 
+                    x:Name="ProjectList" 
+                    Margin="20, 20, 20, 80" 
+                    SelectionMode="Single" 
+                    SelectionChanged="OnProjectSelected">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border 
+                                BackgroundColor="White" 
+                                StrokeShape="RoundRectangle 10" 
+                                Padding="15" 
+                                Margin="0, 0, 0, 10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <VerticalStackLayout 
+                                        Grid.Column="0" 
+                                        Spacing="5">
+                                        <Label 
+                                            Text="{Binding Name}" 
+                                            FontSize="18" 
+                                            FontAttributes="Bold" 
+                                            TextColor="#FF9800" />
+                                        <Label 
+                                            Text="{Binding TargetTime, StringFormat='目标时间: {0}'}" 
+                                            FontSize="14" 
+                                            TextColor="#666666" />
+                                    </VerticalStackLayout>
+                                    
+                                    <VerticalStackLayout 
+                                        Grid.Column="1" 
+                                        VerticalOptions="Center" 
+                                        Spacing="5">
+                                        <Border 
+                                            BackgroundColor="#FF9800" 
+                                            StrokeShape="RoundRectangle 20" 
+                                            Padding="10, 5">
+                                            <Label 
+                                                Text="{Binding CheckInDays, StringFormat='已打卡：{0}天'}" 
+                                                FontSize="14" 
+                                                FontAttributes="Bold" 
+                                                TextColor="White" />
+                                        </Border>
+                                        <Label 
+                                            Text="{Binding CompletionRate}" 
+                                            FontSize="12" 
+                                            FontAttributes="Bold" 
+                                            TextColor="#4CAF50" 
+                                            HorizontalOptions="Center" />
+                                    </VerticalStackLayout>
 
-                            <Button 
-                                Grid.Column="2" 
-                                Text="⋮" 
-                                FontSize="24" 
-                                FontAttributes="Bold" 
-                                TextColor="#666666" 
-                                BackgroundColor="Transparent" 
-                                WidthRequest="40" 
-                                HeightRequest="40" 
-                                Padding="0" 
-                                Clicked="OnMenuButtonClicked" 
-                                VerticalOptions="Center" />
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-        
-        <Label 
-            x:Name="NoProjectsLabel" 
-            Grid.Row="0" 
-            Grid.Column="0" 
-            Text="暂无打卡项目" 
-            FontSize="20" 
-            TextColor="White" 
-            HorizontalOptions="Center" 
-            VerticalOptions="Center" 
-            IsVisible="False" />
+                                    <Button 
+                                        Grid.Column="2" 
+                                        Text="⋮" 
+                                        FontSize="24" 
+                                        FontAttributes="Bold" 
+                                        TextColor="#666666" 
+                                        BackgroundColor="Transparent" 
+                                        WidthRequest="40" 
+                                        HeightRequest="40" 
+                                        Padding="0" 
+                                        Clicked="OnMenuButtonClicked" 
+                                        VerticalOptions="Center" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                
+                <Label 
+                    x:Name="NoProjectsLabel" 
+                    Text="暂无打卡项目" 
+                    FontSize="20" 
+                    TextColor="White" 
+                    HorizontalOptions="Center" 
+                    VerticalOptions="Center" 
+                    IsVisible="False" />
+            </Grid>
+        </RefreshView>
         
         <AbsoluteLayout Grid.Row="0" Grid.Column="0">
             <Button 

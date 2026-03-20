@@ -45,16 +45,38 @@ public partial class MainPage : ContentPage
 		RefreshData();
 	}
 
+	private async void OnRefreshing(object? sender, EventArgs e)
+	{
+		try
+		{
+			RefreshData();
+			await Task.Delay(500);
+		}
+		finally
+		{
+			ProjectRefreshView.IsRefreshing = false;
+		}
+	}
+
 	private void RefreshData()
 	{
 		var loadedProjects = DataService.LoadProjects();
 		
-		// 清空并重新加载数据
+		// 完全替换项目列表，确保所有数据都被刷新
 		_projects.Clear();
 		foreach (var project in loadedProjects)
 		{
 			_projects.Add(project);
 		}
+		
+		// 强制触发所有项目的属性变更通知
+		foreach (var project in _projects)
+		{
+			// 重新赋值CheckInTimes以触发属性变更
+			project.CheckInTimes = new List<string>(project.CheckInTimes);
+		}
+		
+		UpdateNoProjectsLabel();
 	}
 
 	private void LoadData()

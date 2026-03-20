@@ -20,6 +20,55 @@ public class CheckInWidgetLargeProvider : AppWidgetProvider
     private const string ActionCheckIn = "com.companyname.sportrecordapp.CHECKIN_LARGE";
     private const string ActionCheckInAll = "com.companyname.sportrecordapp.CHECKIN_ALL_LARGE";
     private const string ActionRefresh = "com.companyname.sportrecordapp.REFRESH_LARGE";
+    private const string ActionAutoRefresh = "com.companyname.sportrecordapp.AUTO_REFRESH_LARGE";
+    private const long RefreshInterval = 2000; // 2秒
+
+    public override void OnEnabled(Context? context)
+    {
+        base.OnEnabled(context);
+        if (context != null)
+        {
+            StartAutoRefresh(context);
+        }
+    }
+
+    public override void OnDisabled(Context? context)
+    {
+        base.OnDisabled(context);
+        if (context != null)
+        {
+            StopAutoRefresh(context);
+        }
+    }
+
+    private void StartAutoRefresh(Context context)
+    {
+        var alarmManager = context.GetSystemService(Context.AlarmService) as AlarmManager;
+        if (alarmManager != null)
+        {
+            var intent = new Intent(context, typeof(CheckInWidgetLargeProvider));
+            intent.SetAction(ActionAutoRefresh);
+            var pendingIntent = PendingIntent.GetBroadcast(context, 2, intent, PendingIntentFlags.UpdateCurrent | PendingIntentFlags.Immutable);
+            
+            alarmManager.SetRepeating(
+                AlarmType.Rtc,
+                Java.Lang.JavaSystem.CurrentTimeMillis() + RefreshInterval,
+                RefreshInterval,
+                pendingIntent);
+        }
+    }
+
+    private void StopAutoRefresh(Context context)
+    {
+        var alarmManager = context.GetSystemService(Context.AlarmService) as AlarmManager;
+        if (alarmManager != null)
+        {
+            var intent = new Intent(context, typeof(CheckInWidgetLargeProvider));
+            intent.SetAction(ActionAutoRefresh);
+            var pendingIntent = PendingIntent.GetBroadcast(context, 2, intent, PendingIntentFlags.UpdateCurrent | PendingIntentFlags.Immutable);
+            alarmManager.Cancel(pendingIntent);
+        }
+    }
 
     public override void OnUpdate(Context? context, AppWidgetManager? appWidgetManager, int[]? appWidgetIds)
     {
@@ -83,6 +132,12 @@ public class CheckInWidgetLargeProvider : AppWidgetProvider
         var checkInAllPendingIntent = PendingIntent.GetBroadcast(context, appWidgetId + 5000, checkInAllIntent, PendingIntentFlags.UpdateCurrent | PendingIntentFlags.Immutable);
         views.SetOnClickPendingIntent(Resource.Id.widget_checkin_all_button, checkInAllPendingIntent);
         
+        var refreshIntent = new Intent(context, typeof(CheckInWidgetLargeProvider));
+        refreshIntent.SetAction(ActionRefresh);
+        refreshIntent.PutExtra("appWidgetId", appWidgetId);
+        var refreshPendingIntent = PendingIntent.GetBroadcast(context, appWidgetId + 7000, refreshIntent, PendingIntentFlags.UpdateCurrent | PendingIntentFlags.Immutable);
+        views.SetOnClickPendingIntent(Resource.Id.widget_refresh_button, refreshPendingIntent);
+        
         var openAppIntent = context.PackageManager?.GetLaunchIntentForPackage(context.PackageName ?? "");
         if (openAppIntent != null)
         {
@@ -126,6 +181,22 @@ public class CheckInWidgetLargeProvider : AppWidgetProvider
                 if (appWidgetManager != null)
                 {
                     UpdateWidget(context, appWidgetManager, appWidgetId);
+                }
+            }
+        }
+        else if (intent.Action == ActionAutoRefresh)
+        {
+            var appWidgetManager = AppWidgetManager.GetInstance(context);
+            if (appWidgetManager != null)
+            {
+                var componentName = new ComponentName(context, Java.Lang.Class.FromType(typeof(CheckInWidgetLargeProvider)));
+                var appWidgetIds = appWidgetManager.GetAppWidgetIds(componentName);
+                if (appWidgetIds != null && appWidgetIds.Length > 0)
+                {
+                    foreach (int appWidgetId in appWidgetIds)
+                    {
+                        UpdateWidget(context, appWidgetManager, appWidgetId);
+                    }
                 }
             }
         }
