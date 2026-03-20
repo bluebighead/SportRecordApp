@@ -44,4 +44,9 @@ public partial class SettingsPage : ContentPage
         }
 #endif
     }
+
+    private async void OnInstructionsClicked(object? sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new InstructionsPage());
+    }
 }

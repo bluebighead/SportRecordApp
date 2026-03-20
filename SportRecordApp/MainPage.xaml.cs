@@ -27,6 +27,16 @@ public partial class MainPage : ContentPage
 			UpdateNoProjectsLabel();
 		};
 		UpdateNoProjectsLabel();
+		CheckAndShowInstructions();
+	}
+
+	private async void CheckAndShowInstructions()
+	{
+		if (!SettingsService.GetHasSeenInstructions())
+		{
+			await Navigation.PushAsync(new InstructionsPage());
+			SettingsService.SetHasSeenInstructions(true);
+		}
 	}
 
 	protected override void OnAppearing()

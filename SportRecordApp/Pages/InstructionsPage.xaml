@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SportRecordApp.Pages.InstructionsPage"
+             Title="使用说明">
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+            <Label Text="SportRecordApp 使用说明" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
+            
+            <StackLayout Spacing="10">
+                <Label Text="1. 创建运动项目" FontSize="18" FontAttributes="Bold" />
+                <Label Text="点击主页上的'+'按钮，输入运动项目名称和目标打卡天数，创建新的运动项目。" />
+            </StackLayout>
+            
+            <StackLayout Spacing="10">
+                <Label Text="2. 每日打卡" FontSize="18" FontAttributes="Bold" />
+                <Label Text="在主页点击运动项目卡片，进入项目详情页，点击'打卡'按钮完成每日打卡。" />
+            </StackLayout>
+            
+            <StackLayout Spacing="10">
+                <Label Text="3. 日历提醒" FontSize="18" FontAttributes="Bold" />
+                <Label Text="在项目详情页的菜单中选择'打开日历提醒'，系统会自动在日历中添加提醒日程。" />
+            </StackLayout>
+            
+            <StackLayout Spacing="10">
+                <Label Text="4. 查看统计" FontSize="18" FontAttributes="Bold" />
+                <Label Text="在项目详情页查看打卡统计数据和历史记录。" />
+            </StackLayout>
+            
+            <StackLayout Spacing="10">
+                <Label Text="5. 桌面小组件" FontSize="18" FontAttributes="Bold" />
+                <Label Text="在桌面添加小组件，实时查看打卡状态，点击小组件直接进入应用。" />
+            </StackLayout>
+            
+            <StackLayout Spacing="10">
+                <Label Text="6. 设置选项" FontSize="18" FontAttributes="Bold" />
+                <Label Text="在设置页面可以开启'每天只可打卡一次'限制，确保打卡的真实性。" />
+            </StackLayout>
+            
+            <Button Text="我知道了" Clicked="OnGotItClicked" HorizontalOptions="Center" Margin="0,20,0,0" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

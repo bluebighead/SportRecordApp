@@ -44,7 +44,8 @@ public static class SettingsService
                 // 默认设置：每天只可打卡一次默认为开启
                 _settings = new Settings
                 {
-                    DailyCheckInLimit = true
+                    DailyCheckInLimit = true,
+                    HasSeenInstructions = false
                 };
                 SaveSettings();
             }
@@ -83,9 +84,21 @@ public static class SettingsService
         _settings.DailyCheckInLimit = value;
         SaveSettings();
     }
+
+    public static bool GetHasSeenInstructions()
+    {
+        return _settings.HasSeenInstructions;
+    }
+
+    public static void SetHasSeenInstructions(bool value)
+    {
+        _settings.HasSeenInstructions = value;
+        SaveSettings();
+    }
 }
 
 public class Settings
 {
     public bool DailyCheckInLimit { get; set; }
+    public bool HasSeenInstructions { get; set; }
 }
