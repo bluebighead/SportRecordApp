@@ -32,6 +32,13 @@
             </Grid>
         </Border>
         
+        <Label 
+            Text="数据已自动备份，每次打开应用时自动恢复" 
+            FontSize="14" 
+            TextColor="#FFFFFF" 
+            HorizontalOptions="Center" 
+            Opacity="0.8" />
+        
         <Button 
             Text="返回" 
             FontSize="16" 

@@ -52,6 +52,7 @@
                     </Border>
 
                     <Border 
+                        x:Name="UnitPickerBorder"
                         BackgroundColor="#F5F5F5"
                         StrokeShape="RoundRectangle 8"
                         Padding="5"
@@ -63,6 +64,22 @@
                             Title="单位" />
                     </Border>
                 </Grid>
+
+                <HorizontalStackLayout Spacing="10" HorizontalOptions="Start">
+                    <CheckBox 
+                        x:Name="UnlimitedCheckBox"
+                        Color="#9C27B0"
+                        CheckedChanged="OnUnlimitedCheckBoxChanged" />
+                    <Label 
+                        Text="无限打卡时间"
+                        VerticalOptions="Center"
+                        TextColor="#333333"
+                        FontSize="14">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnUnlimitedLabelTapped" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </HorizontalStackLayout>
 
                 <HorizontalStackLayout Spacing="15" HorizontalOptions="Center">
                     <Button 

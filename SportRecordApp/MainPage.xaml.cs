@@ -3,6 +3,11 @@ using SportRecordApp.Models;
 using SportRecordApp.Pages;
 using SportRecordApp.Services;
 using Microsoft.Maui.Devices;
+#if ANDROID
+using Android.App;
+using Android.Appwidget;
+using Android.Content;
+#endif
 
 namespace SportRecordApp;
 
@@ -24,6 +29,24 @@ public partial class MainPage : ContentPage
 		UpdateNoProjectsLabel();
 	}
 
+	protected override void OnAppearing()
+	{
+		base.OnAppearing();
+		RefreshData();
+	}
+
+	private void RefreshData()
+	{
+		var loadedProjects = DataService.LoadProjects();
+		
+		// 清空并重新加载数据
+		_projects.Clear();
+		foreach (var project in loadedProjects)
+		{
+			_projects.Add(project);
+		}
+	}
+
 	private void LoadData()
 	{
 		var loadedProjects = DataService.LoadProjects();
@@ -42,6 +65,34 @@ public partial class MainPage : ContentPage
 	private void SaveData()
 	{
 		DataService.SaveProjects(_projects.ToList());
+		UpdateWidget();
+	}
+
+	private void UpdateWidget()
+	{
+#if ANDROID
+		try
+		{
+			var context = Android.App.Application.Context;
+			var appWidgetManager = AppWidgetManager.GetInstance(context);
+			if (appWidgetManager != null)
+			{
+				var componentName = new ComponentName(context, Java.Lang.Class.FromType(typeof(Platforms.Android.CheckInWidgetProvider)));
+				var appWidgetIds = appWidgetManager.GetAppWidgetIds(componentName);
+				if (appWidgetIds != null && appWidgetIds.Length > 0)
+				{
+					var intent = new Intent(context, typeof(Platforms.Android.CheckInWidgetProvider));
+					intent.SetAction("android.appwidget.action.APPWIDGET_UPDATE");
+					intent.PutExtra("appWidgetIds", appWidgetIds);
+					context.SendBroadcast(intent);
+				}
+			}
+		}
+		catch (Exception ex)
+		{
+			System.Diagnostics.Debug.WriteLine($"更新小组件失败: {ex.Message}");
+		}
+#endif
 	}
 
 	private void OnSizeChanged(object? sender, EventArgs e)
@@ -85,12 +136,13 @@ public partial class MainPage : ContentPage
 		
 		dialog.OnConfirm += (s, args) =>
 		{
-			if (!string.IsNullOrWhiteSpace(args.ProjectName) && !string.IsNullOrWhiteSpace(args.TargetTime))
+			if (!string.IsNullOrWhiteSpace(args.ProjectName))
 			{
 				var newProject = new SportProject
 				{
 					Name = args.ProjectName,
-					TargetTime = args.TargetTime
+					TargetTime = args.TargetTime,
+					IsUnlimited = args.IsUnlimited
 				};
 				_projects.Add(newProject);
 			}
@@ -136,12 +188,15 @@ public partial class MainPage : ContentPage
 	{
 		if (sender is Button button && button.BindingContext is SportProject project)
 		{
-			string action = await DisplayActionSheetAsync("项目操作", "取消", null, "编辑", "删除");
+			string action = await DisplayActionSheetAsync("项目操作", "取消", null, "编辑", "回退一天", "删除");
 			
 			switch (action)
 			{
 				case "编辑":
 					await EditProject(project);
+					break;
+				case "回退一天":
+					UndoOneDay(project);
 					break;
 				case "删除":
 					await DeleteProject(project);
@@ -150,8 +205,22 @@ public partial class MainPage : ContentPage
 		}
 	}
 
+	private void UndoOneDay(SportProject project)
+	{
+		if (project.CheckInTimes.Count > 0)
+		{
+			project.CheckInTimes.RemoveAt(project.CheckInTimes.Count - 1);
+			// 重新赋值以触发属性变更通知
+			project.CheckInTimes = new List<string>(project.CheckInTimes);
+			SaveData();
+		}
+	}
+
 	private async void DoUnifiedCheckIn()
 	{
+		SoundService.PlayCheckInSound();
+		await AnimationService.PlayPulseAnimationAsync(MenuButton);
+		
 		try
 		{
 			// 短震动反馈
@@ -184,10 +253,10 @@ public partial class MainPage : ContentPage
 			}
 			
 			bool wasCompleted = project.IsCompleted;
-			int oldDays = project.CheckInDays;
-			project.CheckInDays++;
-			string checkInTime = DateTime.Now.ToString("yyyy年MM月dd日HH时mm分ss秒");
+			string checkInTime = DateTime.Now.ToString("yyyy年MM月dd日 HH:mm:ss");
 			project.CheckInTimes.Add(checkInTime);
+			// 重新赋值以触发属性变更通知
+			project.CheckInTimes = new List<string>(project.CheckInTimes);
 			
 			// 检查是否有项目首次完成
 			try
@@ -211,17 +280,23 @@ public partial class MainPage : ContentPage
 			await DisplayAlertAsync("提示", "部分项目今天已经打卡过了", "确定");
 		}
 		
-		try
+		// 如果有项目完成，播放成功动画和音效
+		if (hasCompleted)
 		{
-			// 如果有项目完成，触发长震动
-			if (hasCompleted && Vibration.Default.IsSupported)
+			SoundService.PlaySuccessSound();
+			await AnimationService.PlaySuccessAnimationAsync(MenuButton);
+			
+			try
 			{
-				Vibration.Default.Vibrate(TimeSpan.FromMilliseconds(500));
+				if (Vibration.Default.IsSupported)
+				{
+					Vibration.Default.Vibrate(TimeSpan.FromMilliseconds(500));
+				}
 			}
-		}
-		catch (Exception ex)
-		{
-			Console.WriteLine($"震动失败: {ex.Message}");
+			catch (Exception ex)
+			{
+				Console.WriteLine($"震动失败: {ex.Message}");
+			}
 		}
 	}
 
@@ -262,6 +337,7 @@ public partial class MainPage : ContentPage
 			// 更新项目信息
 			project.Name = updatedProject.ProjectName;
 			project.TargetTime = updatedProject.TargetTime;
+			project.IsUnlimited = updatedProject.IsUnlimited;
 			SaveData();
 		};
 		

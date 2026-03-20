@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">运动打卡</string>
+    <string name="widget_description">快速打卡小组件</string>
+    <string name="widget_description_small">小型打卡小组件</string>
+    <string name="widget_description_large">多项目打卡小组件</string>
+</resources>

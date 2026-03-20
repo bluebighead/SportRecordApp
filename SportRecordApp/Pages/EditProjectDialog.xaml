@@ -51,6 +51,7 @@
                     TextChanged="OnTargetTimeTextChanged" />
             </Border>
             <Border 
+                x:Name="UnitPickerBorder"
                 BackgroundColor="#FFFFFF"
                 StrokeShape="RoundRectangle 10" 
                 StrokeThickness="2"
@@ -66,6 +67,22 @@
                     TitleColor="#999999"
                     BackgroundColor="Transparent" />
             </Border>
+        </HorizontalStackLayout>
+        
+        <HorizontalStackLayout Spacing="10" HorizontalOptions="Start">
+            <CheckBox 
+                x:Name="UnlimitedCheckBox"
+                Color="#9C27B0"
+                CheckedChanged="OnUnlimitedCheckBoxChanged" />
+            <Label 
+                Text="无限打卡时间"
+                VerticalOptions="Center"
+                TextColor="White"
+                FontSize="14">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnUnlimitedLabelTapped" />
+                </Label.GestureRecognizers>
+            </Label>
         </HorizontalStackLayout>
         
         <HorizontalStackLayout Spacing="20" HorizontalOptions="Center">

@@ -8,9 +8,9 @@ public class SportProject : INotifyPropertyChanged
     private string _name = string.Empty;
     private string _targetTime = string.Empty;
     private DateTime _createdTime = DateTime.Now;
-    private int _checkInDays = 0;
     private List<string> _checkInTimes = new();
     private bool _isCompletedBefore = false;
+    private bool _isUnlimited = false;
 
     public string Name
     {
@@ -64,24 +64,21 @@ public class SportProject : INotifyPropertyChanged
 
     public int CheckInDays
     {
-        get => _checkInDays;
+        get => _checkInTimes.Count;
         set
         {
-            if (_checkInDays != value)
+            // 保持向后兼容，实际值由CheckInTimes列表长度决定
+            OnPropertyChanged();
+            
+            bool wasCompleted = IsCompleted;
+            OnPropertyChanged(nameof(IsCompleted));
+            OnPropertyChanged(nameof(CompletionRate));
+            
+            // 检测是否是首次完成
+            if (IsCompleted && !wasCompleted && !_isCompletedBefore)
             {
-                _checkInDays = value;
-                OnPropertyChanged();
-                
-                bool wasCompleted = IsCompleted;
-                OnPropertyChanged(nameof(IsCompleted));
-                OnPropertyChanged(nameof(CompletionRate));
-                
-                // 检测是否是首次完成
-                if (IsCompleted && !wasCompleted && !_isCompletedBefore)
-                {
-                    _isCompletedBefore = true;
-                    OnPropertyChanged(nameof(IsCompletedBefore));
-                }
+                _isCompletedBefore = true;
+                OnPropertyChanged(nameof(IsCompletedBefore));
             }
         }
     }
@@ -99,6 +96,21 @@ public class SportProject : INotifyPropertyChanged
         }
     }
 
+    public bool IsUnlimited
+    {
+        get => _isUnlimited;
+        set
+        {
+            if (_isUnlimited != value)
+            {
+                _isUnlimited = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsCompleted));
+                OnPropertyChanged(nameof(CompletionRate));
+            }
+        }
+    }
+
     public List<string> CheckInTimes
     {
         get => _checkInTimes;
@@ -108,6 +120,9 @@ public class SportProject : INotifyPropertyChanged
             {
                 _checkInTimes = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(CheckInDays));
+                OnPropertyChanged(nameof(IsCompleted));
+                OnPropertyChanged(nameof(CompletionRate));
             }
         }
     }
@@ -116,6 +131,10 @@ public class SportProject : INotifyPropertyChanged
     {
         get
         {
+            if (_isUnlimited)
+            {
+                return false;
+            }
             try
             {
                 var match = System.Text.RegularExpressions.Regex.Match(TargetTime ?? string.Empty, @"\d+");
@@ -135,6 +154,10 @@ public class SportProject : INotifyPropertyChanged
     {
         get
         {
+            if (_isUnlimited)
+            {
+                return "无限模式";
+            }
             try
             {
                 var match = System.Text.RegularExpressions.Regex.Match(TargetTime ?? string.Empty, @"\d+");

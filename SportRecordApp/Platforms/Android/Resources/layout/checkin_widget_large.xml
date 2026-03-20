@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/widget_background_large"
+    android:padding="16dp">
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp">
+        
+        <TextView
+            android:id="@+id/widget_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="运动打卡"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+        
+        <TextView
+            android:id="@+id/widget_total_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="共 0 次打卡"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:alpha="0.8" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/widget_projects_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        
+        <LinearLayout
+            android:id="@+id/project_row_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:visibility="gone">
+            
+            <TextView
+                android:id="@+id/project_name_1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="项目1"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:ellipsize="end"
+                android:maxLines="1" />
+            
+            <TextView
+                android:id="@+id/project_count_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0次"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:alpha="0.8"
+                android:layout_marginEnd="8dp" />
+            
+            <Button
+                android:id="@+id/project_button_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="打卡"
+                android:background="#4CAF50"
+                android:textColor="#FFFFFF"
+                android:textSize="11sp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:minHeight="0dp"
+                android:minWidth="0dp" />
+        </LinearLayout>
+        
+        <LinearLayout
+            android:id="@+id/project_row_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:visibility="gone">
+            
+            <TextView
+                android:id="@+id/project_name_2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="项目2"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:ellipsize="end"
+                android:maxLines="1" />
+            
+            <TextView
+                android:id="@+id/project_count_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0次"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:alpha="0.8"
+                android:layout_marginEnd="8dp" />
+            
+            <Button
+                android:id="@+id/project_button_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="打卡"
+                android:background="#4CAF50"
+                android:textColor="#FFFFFF"
+                android:textSize="11sp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:minHeight="0dp"
+                android:minWidth="0dp" />
+        </LinearLayout>
+        
+        <LinearLayout
+            android:id="@+id/project_row_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:visibility="gone">
+            
+            <TextView
+                android:id="@+id/project_name_3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="项目3"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:ellipsize="end"
+                android:maxLines="1" />
+            
+            <TextView
+                android:id="@+id/project_count_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0次"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:alpha="0.8"
+                android:layout_marginEnd="8dp" />
+            
+            <Button
+                android:id="@+id/project_button_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="打卡"
+                android:background="#4CAF50"
+                android:textColor="#FFFFFF"
+                android:textSize="11sp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:minHeight="0dp"
+                android:minWidth="0dp" />
+        </LinearLayout>
+        
+        <LinearLayout
+            android:id="@+id/project_row_4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:visibility="gone">
+            
+            <TextView
+                android:id="@+id/project_name_4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="项目4"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:ellipsize="end"
+                android:maxLines="1" />
+            
+            <TextView
+                android:id="@+id/project_count_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0次"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:alpha="0.8"
+                android:layout_marginEnd="8dp" />
+            
+            <Button
+                android:id="@+id/project_button_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="打卡"
+                android:background="#4CAF50"
+                android:textColor="#FFFFFF"
+                android:textSize="11sp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:minHeight="0dp"
+                android:minWidth="0dp" />
+        </LinearLayout>
+        
+        <TextView
+            android:id="@+id/widget_empty_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="暂无项目，点击添加"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:alpha="0.7"
+            android:gravity="center"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:visibility="visible" />
+    </LinearLayout>
+    
+    <Button
+        android:id="@+id/widget_checkin_all_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="全部打卡"
+        android:background="#2196F3"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:minHeight="0dp" />
+        
+</LinearLayout>

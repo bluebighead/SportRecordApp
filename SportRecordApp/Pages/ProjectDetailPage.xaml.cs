@@ -1,6 +1,11 @@
 using SportRecordApp.Models;
 using SportRecordApp.Services;
 using Microsoft.Maui.Devices;
+#if ANDROID
+using Android.App;
+using Android.Appwidget;
+using Android.Content;
+#endif
 
 namespace SportRecordApp.Pages;
 
@@ -56,10 +61,16 @@ public partial class ProjectDetailPage : ContentPage
 				
 				if (hasCheckedInToday)
 				{
+					SoundService.PlayErrorSound();
+					await AnimationService.PlayShakeAnimationAsync(CheckInButton);
 					await DisplayAlertAsync("提示", "你今天已经打卡过了", "确定");
 					return;
 				}
 			}
+			
+			// 播放打卡动画和音效
+			SoundService.PlayCheckInSound();
+			await AnimationService.PlayCheckInAnimationAsync(CheckInButton);
 			
 			try
 			{
@@ -77,34 +88,77 @@ public partial class ProjectDetailPage : ContentPage
 			// 记录打卡前的状态
 			bool wasCompleted = _project.IsCompleted;
 			
-			_project.CheckInDays++;
-			string checkInTime = DateTime.Now.ToString("yyyy年MM月dd日HH时mm分ss秒");
+			string checkInTime = DateTime.Now.ToString("yyyy年MM月dd日 HH:mm:ss");
 			_project.CheckInTimes.Add(checkInTime);
 			UpdateUI();
 			SaveData();
 			
-			try
+			// 如果首次完成目标，播放成功动画和音效
+			if (_project.IsCompleted && !wasCompleted)
 			{
-				// 首次完成时的长震动
-				if (_project.IsCompleted && !wasCompleted && Vibration.Default.IsSupported)
+				SoundService.PlaySuccessSound();
+				await AnimationService.PlaySuccessAnimationAsync(CheckInButton);
+				
+				try
 				{
-					Vibration.Default.Vibrate(TimeSpan.FromMilliseconds(500));
+					if (Vibration.Default.IsSupported)
+					{
+						Vibration.Default.Vibrate(TimeSpan.FromMilliseconds(500));
+					}
 				}
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine($"震动失败: {ex.Message}");
+				catch (Exception ex)
+				{
+					Console.WriteLine($"震动失败: {ex.Message}");
+				}
 			}
 		}
 	}
 
 	private void SaveData()
 	{
-		// 获取主页面的项目列表并保存
-		if (Shell.Current.Navigation.NavigationStack.FirstOrDefault() is MainPage mainPage)
+		if (_project != null)
 		{
-			// 主页面会自动保存数据
+			var allProjects = DataService.LoadProjects();
+			var existingProject = allProjects.FirstOrDefault(p => p.Name == _project.Name);
+			if (existingProject != null)
+			{
+				existingProject.CheckInTimes = _project.CheckInTimes;
+				existingProject.TargetTime = _project.TargetTime;
+				existingProject.IsCompletedBefore = _project.IsCompletedBefore;
+				existingProject.IsUnlimited = _project.IsUnlimited;
+			}
+			DataService.SaveProjects(allProjects);
+			
+			// 通知小组件更新
+			UpdateWidget();
 		}
+	}
+
+	private void UpdateWidget()
+	{
+#if ANDROID
+		try
+		{
+			var context = Android.App.Application.Context;
+			var appWidgetManager = AppWidgetManager.GetInstance(context);
+			if (appWidgetManager != null)
+			{
+				var componentName = new ComponentName(context, Java.Lang.Class.FromType(typeof(Platforms.Android.CheckInWidgetProvider)));
+				var appWidgetIds = appWidgetManager.GetAppWidgetIds(componentName);
+				if (appWidgetIds != null && appWidgetIds.Length > 0)
+				{
+					var intent = new Intent(context, typeof(Platforms.Android.CheckInWidgetProvider));
+					intent.SetAction("android.appwidget.action.APPWIDGET_UPDATE");
+					intent.PutExtra("appWidgetIds", appWidgetIds);
+					context.SendBroadcast(intent);
+				}
+			}
+		}
+		catch (Exception ex)
+		{
+			System.Diagnostics.Debug.WriteLine($"更新小组件失败: {ex.Message}");
+		}
+#endif
 	}
 
 	private async void OnBackClicked(object? sender, EventArgs e)
@@ -116,7 +170,7 @@ public partial class ProjectDetailPage : ContentPage
 
 	private async void OnMenuClicked(object? sender, EventArgs e)
 	{
-		string action = await DisplayActionSheetAsync("菜单", "取消", null, "回退打卡记录", "打卡时间详情");
+		string action = await DisplayActionSheetAsync("菜单", "取消", null, "回退打卡记录", "打卡时间详情", "日历提醒");
 		
 		if (action == "回退打卡记录")
 		{
@@ -126,17 +180,32 @@ public partial class ProjectDetailPage : ContentPage
 		{
 			ShowCheckInDetails();
 		}
+		else if (action == "日历提醒")
+		{
+			await SetCalendarReminder();
+		}
+	}
+
+	private async Task SetCalendarReminder()
+	{
+		if (_project == null) return;
+		
+		try
+		{
+			await CalendarService.CreateReminderEventAsync(_project.Name, _project.TargetTime);
+			await DisplayAlertAsync("成功", "已添加日历提醒", "确定");
+		}
+		catch (Exception ex)
+		{
+			await DisplayAlertAsync("错误", $"添加日历提醒失败: {ex.Message}", "确定");
+		}
 	}
 
 	private void UndoCheckIn()
 	{
-		if (_project != null && _project.CheckInDays > 0)
+		if (_project != null && _project.CheckInTimes.Count > 0)
 		{
-			_project.CheckInDays--;
-			if (_project.CheckInTimes.Count > 0)
-			{
-				_project.CheckInTimes.RemoveAt(_project.CheckInTimes.Count - 1);
-			}
+			_project.CheckInTimes.RemoveAt(_project.CheckInTimes.Count - 1);
 			UpdateUI();
 			SaveData();
 		}

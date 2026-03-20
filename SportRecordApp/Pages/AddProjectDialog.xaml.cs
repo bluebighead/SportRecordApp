@@ -2,18 +2,51 @@ namespace SportRecordApp.Pages;
 
 public partial class AddProjectDialog : ContentPage
 {
-	public event EventHandler<(string ProjectName, string TargetTime)>? OnConfirm;
+	public event EventHandler<(string ProjectName, string TargetTime, bool IsUnlimited)>? OnConfirm;
 	public event EventHandler? OnCancel;
 
 	private readonly List<string> _units = new() { "天" };
 	private bool _isProjectNameValid = true;
 	private bool _isTargetTimeValid = true;
+	private bool _isUnlimited = false;
 
 	public AddProjectDialog()
 	{
 		InitializeComponent();
 		UnitPicker.ItemsSource = _units;
 		UnitPicker.SelectedIndex = 0;
+	}
+
+	private void OnUnlimitedCheckBoxChanged(object? sender, CheckedChangedEventArgs e)
+	{
+		_isUnlimited = e.Value;
+		UpdateTimeInputState();
+	}
+
+	private void OnUnlimitedLabelTapped(object? sender, EventArgs e)
+	{
+		UnlimitedCheckBox.IsChecked = !UnlimitedCheckBox.IsChecked;
+	}
+
+	private void UpdateTimeInputState()
+	{
+		bool isEnabled = !_isUnlimited;
+		
+		TargetTimeEntry.IsEnabled = isEnabled;
+		UnitPicker.IsEnabled = isEnabled;
+		
+		if (_isUnlimited)
+		{
+			TargetTimeBorder.BackgroundColor = Color.FromArgb("#E0E0E0");
+			UnitPickerBorder.BackgroundColor = Color.FromArgb("#E0E0E0");
+			_isTargetTimeValid = true;
+		}
+		else
+		{
+			TargetTimeBorder.BackgroundColor = Color.FromArgb("#F5F5F5");
+			UnitPickerBorder.BackgroundColor = Color.FromArgb("#F5F5F5");
+			_isTargetTimeValid = !string.IsNullOrWhiteSpace(TargetTimeEntry.Text) && double.TryParse(TargetTimeEntry.Text, out _);
+		}
 	}
 
 	private void OnCancelClicked(object? sender, EventArgs e)
@@ -28,7 +61,11 @@ public partial class AddProjectDialog : ContentPage
 		string selectedUnit = UnitPicker.SelectedItem?.ToString() ?? string.Empty;
 
 		_isProjectNameValid = !string.IsNullOrWhiteSpace(projectName);
-		_isTargetTimeValid = !string.IsNullOrWhiteSpace(targetTimeValue) && double.TryParse(targetTimeValue, out _);
+		
+		if (!_isUnlimited)
+		{
+			_isTargetTimeValid = !string.IsNullOrWhiteSpace(targetTimeValue) && double.TryParse(targetTimeValue, out _);
+		}
 
 		UpdateInputBorders();
 
@@ -37,8 +74,8 @@ public partial class AddProjectDialog : ContentPage
 			return;
 		}
 
-		string targetTime = $"{targetTimeValue}{selectedUnit}";
-		OnConfirm?.Invoke(this, (projectName, targetTime));
+		string targetTime = _isUnlimited ? "无限" : $"{targetTimeValue}{selectedUnit}";
+		OnConfirm?.Invoke(this, (projectName, targetTime, _isUnlimited));
 	}
 
 	private void OnProjectNameTextChanged(object? sender, TextChangedEventArgs e)
