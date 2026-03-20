@@ -11,4 +11,9 @@ public partial class AboutPage : ContentPage
     {
         await Navigation.PopAsync();
     }
+
+    private async void OnInstructionsClicked(object? sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new InstructionsPage());
+    }
 }
