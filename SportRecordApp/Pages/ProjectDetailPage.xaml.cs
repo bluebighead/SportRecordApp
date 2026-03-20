@@ -143,11 +143,11 @@ public partial class ProjectDetailPage : ContentPage
 			var appWidgetManager = AppWidgetManager.GetInstance(context);
 			if (appWidgetManager != null)
 			{
-				var componentName = new ComponentName(context, Java.Lang.Class.FromType(typeof(Platforms.Android.CheckInWidgetProvider)));
+				var componentName = new ComponentName(context, Java.Lang.Class.FromType(typeof(Platforms.Android.CheckInWidgetLargeProvider)));
 				var appWidgetIds = appWidgetManager.GetAppWidgetIds(componentName);
 				if (appWidgetIds != null && appWidgetIds.Length > 0)
 				{
-					var intent = new Intent(context, typeof(Platforms.Android.CheckInWidgetProvider));
+					var intent = new Intent(context, typeof(Platforms.Android.CheckInWidgetLargeProvider));
 					intent.SetAction("android.appwidget.action.APPWIDGET_UPDATE");
 					intent.PutExtra("appWidgetIds", appWidgetIds);
 					context.SendBroadcast(intent);
