@@ -20,19 +20,36 @@
                     TextColor="#FF9800"
                     HorizontalOptions="Center" />
 
-                <Border 
-                    x:Name="ProjectNameBorder"
-                    BackgroundColor="#F5F5F5"
-                    StrokeShape="RoundRectangle 8"
-                    Padding="10">
-                    <Entry 
-                        x:Name="ProjectNameEntry"
-                        Placeholder="项目名称"
-                        PlaceholderColor="#999999"
-                        TextColor="#333333"
-                        BackgroundColor="Transparent"
-                        TextChanged="OnProjectNameTextChanged" />
-                </Border>
+                <Grid ColumnDefinitions="3*, *" ColumnSpacing="5">
+                    <Border 
+                        x:Name="ProjectNameBorder"
+                        BackgroundColor="#F5F5F5"
+                        StrokeShape="RoundRectangle 8"
+                        Padding="10"
+                        Grid.Column="0">
+                        <Entry 
+                            x:Name="ProjectNameEntry"
+                            Placeholder="项目名称"
+                            PlaceholderColor="#999999"
+                            TextColor="#333333"
+                            BackgroundColor="Transparent"
+                            TextChanged="OnProjectNameTextChanged" />
+                    </Border>
+
+                    <Border 
+                        x:Name="PresetPickerBorder"
+                        BackgroundColor="#F5F5F5"
+                        StrokeShape="RoundRectangle 8"
+                        Padding="5"
+                        Grid.Column="1">
+                        <Picker 
+                            x:Name="PresetPicker"
+                            BackgroundColor="Transparent"
+                            TextColor="#333333"
+                            Title="预设"
+                            SelectedIndexChanged="OnPresetPickerSelectedIndexChanged" />
+                    </Border>
+                </Grid>
 
                 <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
                     <Border 

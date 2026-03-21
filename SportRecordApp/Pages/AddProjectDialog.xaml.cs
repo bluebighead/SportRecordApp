@@ -6,6 +6,7 @@ public partial class AddProjectDialog : ContentPage
 	public event EventHandler? OnCancel;
 
 	private readonly List<string> _units = new() { "天" };
+	private readonly List<string> _presets = new() { "无", "平板支撑" };
 	private bool _isProjectNameValid = true;
 	private bool _isTargetTimeValid = true;
 	private bool _isUnlimited = false;
@@ -15,6 +16,8 @@ public partial class AddProjectDialog : ContentPage
 		InitializeComponent();
 		UnitPicker.ItemsSource = _units;
 		UnitPicker.SelectedIndex = 0;
+		PresetPicker.ItemsSource = _presets;
+		PresetPicker.SelectedIndex = 0;
 	}
 
 	private void OnUnlimitedCheckBoxChanged(object? sender, CheckedChangedEventArgs e)
@@ -116,5 +119,26 @@ public partial class AddProjectDialog : ContentPage
 	{
 		ProjectNameBorder.BackgroundColor = _isProjectNameValid ? Color.FromArgb("#F5F5F5") : Color.FromArgb("#FFCCCC");
 		TargetTimeBorder.BackgroundColor = _isTargetTimeValid ? Color.FromArgb("#F5F5F5") : Color.FromArgb("#FFCCCC");
+	}
+
+	private void OnPresetPickerSelectedIndexChanged(object? sender, EventArgs e)
+	{
+		if (PresetPicker.SelectedItem == null) return;
+
+		string selectedPreset = PresetPicker.SelectedItem.ToString() ?? "无";
+
+		if (selectedPreset == "平板支撑")
+		{
+			ProjectNameEntry.Text = "平板支撑";
+			ProjectNameEntry.IsEnabled = false;
+			ProjectNameBorder.BackgroundColor = Color.FromArgb("#E0E0E0");
+			_isProjectNameValid = true;
+		}
+		else
+		{
+			ProjectNameEntry.Text = string.Empty;
+			ProjectNameEntry.IsEnabled = true;
+			ProjectNameBorder.BackgroundColor = Color.FromArgb("#F5F5F5");
+		}
 	}
 }

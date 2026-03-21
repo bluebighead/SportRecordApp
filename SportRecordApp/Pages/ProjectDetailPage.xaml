@@ -22,6 +22,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             
             <Button 
@@ -33,8 +34,17 @@
                 HorizontalOptions="Start"
                 Clicked="OnBackClicked" />
             
-            <Button 
+            <Label 
                 Grid.Column="1"
+                x:Name="CurrentTimeLabel"
+                Text=""
+                FontSize="16"
+                TextColor="White"
+                HorizontalOptions="Center"
+                VerticalOptions="Center" />
+            
+            <Button 
+                Grid.Column="2"
                 Text="☰"
                 BackgroundColor="Transparent"
                 TextColor="White"
@@ -84,6 +94,15 @@
                         HorizontalOptions="Center" />
                 </VerticalStackLayout>
             </HorizontalStackLayout>
+            
+            <Label
+                x:Name="TimerLabel"
+                Text="00:00:00"
+                FontSize="32"
+                FontAttributes="Bold"
+                TextColor="#FFFFFF"
+                HorizontalOptions="Center"
+                IsVisible="False" />
         </VerticalStackLayout>
 
         <AbsoluteLayout 
@@ -106,6 +125,7 @@
                 HorizontalOptions="Center"
                 AbsoluteLayout.LayoutFlags="PositionProportional"
                 AbsoluteLayout.LayoutBounds="0.5, 0.3, AutoSize, AutoSize" />
+            
             <Button
                 x:Name="CheckInButton"
                 Text="打卡"
@@ -120,6 +140,22 @@
                 Clicked="OnCheckInClicked"
                 AbsoluteLayout.LayoutFlags="PositionProportional"
                 AbsoluteLayout.LayoutBounds="0.5, 0.5, 120, 120" />
+            
+            <Button
+                x:Name="TimerButton"
+                Text="开始计时"
+                FontSize="16"
+                FontAttributes="Bold"
+                TextColor="White"
+                BackgroundColor="#4CAF50"
+                WidthRequest="140"
+                HeightRequest="45"
+                CornerRadius="22"
+                Padding="0"
+                Clicked="OnTimerButtonClicked"
+                IsVisible="False"
+                AbsoluteLayout.LayoutFlags="PositionProportional"
+                AbsoluteLayout.LayoutBounds="0.5, 0.7, 140, 45" />
         </AbsoluteLayout>
     </Grid>
 

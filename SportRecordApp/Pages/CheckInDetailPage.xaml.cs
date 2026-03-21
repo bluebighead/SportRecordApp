@@ -259,10 +259,58 @@ public partial class CheckInDetailPage : ContentPage
 				writer.WriteLine($"{_project.Name},{_project.TargetTime},{_project.CheckInDays},{_project.CompletionRate}");
 				writer.WriteLine();
 				writer.WriteLine("打卡时间记录");
-				// 写入打卡记录
-				foreach (var time in _project.CheckInTimes)
+				
+				// 检查是否为平板支撑项目
+				bool isPlankSupport = _project.Name == "平板支撑";
+				
+				if (isPlankSupport)
 				{
-					writer.WriteLine(time);
+					// 平板支撑项目添加表头
+					writer.WriteLine("日期,当日具体打卡时间,支撑时间");
+					
+					// 写入打卡记录，拆分时间信息
+					foreach (var time in _project.CheckInTimes)
+					{
+						// 解析打卡时间格式：2026年03月21日 17:50:00 (00:01:30)
+						string date = "";
+						string timeOfDay = "";
+						string plankTime = "";
+						
+						if (!string.IsNullOrEmpty(time))
+						{
+							// 提取日期部分（前11个字符）
+							if (time.Length >= 11)
+							{
+								date = time.Substring(0, 11);
+							}
+							
+							// 提取具体时间部分
+							int timeStartIndex = 12;
+							int timeEndIndex = time.IndexOf(" (");
+							if (timeEndIndex > timeStartIndex)
+							{
+								timeOfDay = time.Substring(timeStartIndex, timeEndIndex - timeStartIndex);
+							}
+							
+							// 提取支撑时间部分
+							int plankStartIndex = time.IndexOf("(") + 1;
+							int plankEndIndex = time.IndexOf(")");
+							if (plankEndIndex > plankStartIndex)
+							{
+								plankTime = time.Substring(plankStartIndex, plankEndIndex - plankStartIndex);
+							}
+						}
+						
+						writer.WriteLine($"{date},{timeOfDay},{plankTime}");
+					}
+				}
+				else
+				{
+					// 其他项目保持原有逻辑
+					foreach (var time in _project.CheckInTimes)
+					{
+						writer.WriteLine(time);
+					}
 				}
 			}
 

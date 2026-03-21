@@ -12,12 +12,40 @@ namespace SportRecordApp.Pages;
 public partial class ProjectDetailPage : ContentPage
 {
 	private SportProject? _project;
+	private bool _isTimerRunning = false;
+	private DateTime _timerStartTime;
+	private TimeSpan _elapsedTime = TimeSpan.Zero;
+	private System.Timers.Timer? _timer;
+	private System.Timers.Timer? _timeUpdateTimer;
 
 	public ProjectDetailPage(SportProject project)
 	{
 		InitializeComponent();
 		_project = project;
 		UpdateUI();
+		StartTimeUpdateTimer();
+	}
+
+	private void StartTimeUpdateTimer()
+	{
+		// 更新当前时间
+		UpdateCurrentTime();
+		
+		// 启动定时器，每秒更新一次时间
+		_timeUpdateTimer = new System.Timers.Timer(1000);
+		_timeUpdateTimer.Elapsed += (s, e) =>
+		{
+			MainThread.BeginInvokeOnMainThread(() =>
+			{
+				UpdateCurrentTime();
+			});
+		};
+		_timeUpdateTimer.Start();
+	}
+
+	private void UpdateCurrentTime()
+	{
+		CurrentTimeLabel.Text = DateTime.Now.ToString("HH:mm:ss");
 	}
 
 	private void UpdateUI()
@@ -27,6 +55,9 @@ public partial class ProjectDetailPage : ContentPage
 			ProjectNameLabel.Text = _project.Name;
 			TargetTimeLabel.Text = _project.TargetTime;
 			CheckInDaysLabel.Text = $"{_project.CheckInDays} 天";
+			
+			bool isPlankSupport = _project.Name == "平板支撑";
+			TimerButton.IsVisible = isPlankSupport;
 			
 			if (_project.IsCompleted)
 			{
@@ -45,6 +76,47 @@ public partial class ProjectDetailPage : ContentPage
 			{
 				LastCheckInTimeLabel.Text = "";
 			}
+			
+			// 平板支撑项目的按钮状态管理
+			if (isPlankSupport)
+			{
+				// 检查今天是否已经打卡
+				string today = DateTime.Now.ToString("yyyy年MM月dd日");
+				bool hasCheckedInToday = _project.CheckInTimes.Any(time => time.StartsWith(today));
+				
+				if (hasCheckedInToday)
+				{
+					// 今天已经打卡，禁用所有按钮
+					CheckInButton.IsEnabled = false;
+					CheckInButton.BackgroundColor = Colors.Gray;
+					TimerButton.IsEnabled = false;
+					TimerButton.BackgroundColor = Colors.Gray;
+				}
+				else
+				{
+					// 今天未打卡，根据计时状态设置按钮状态
+					if (_elapsedTime.TotalSeconds > 0)
+					{
+						// 已完成计时，启用打卡按钮，禁用计时按钮
+						CheckInButton.IsEnabled = true;
+						CheckInButton.BackgroundColor = Color.FromArgb("#8A2BE2");
+						TimerButton.IsEnabled = false;
+						TimerButton.BackgroundColor = Colors.Gray;
+					}
+					else
+					{
+						// 未进行计时，禁用打卡按钮，启用计时按钮
+						CheckInButton.IsEnabled = false;
+						CheckInButton.BackgroundColor = Colors.Gray;
+						TimerButton.IsEnabled = true;
+						TimerButton.BackgroundColor = Color.FromArgb("#4CAF50");
+						if (_isTimerRunning)
+						{
+							TimerButton.BackgroundColor = Colors.Red;
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -52,6 +124,19 @@ public partial class ProjectDetailPage : ContentPage
 	{
 		if (_project != null)
 		{
+			string timerDuration = string.Empty;
+			
+			if (_isTimerRunning)
+			{
+				StopTimer();
+				timerDuration = FormatTime(_elapsedTime);
+			}
+			else if (_elapsedTime.TotalSeconds > 0)
+			{
+				// 如果计时器已停止但有计时数据，也使用该数据
+				timerDuration = FormatTime(_elapsedTime);
+			}
+			
 			// 检查是否开启了每天只可打卡一次的功能
 			if (SettingsService.GetDailyCheckInLimit())
 			{
@@ -89,9 +174,17 @@ public partial class ProjectDetailPage : ContentPage
 			bool wasCompleted = _project.IsCompleted;
 			
 			string checkInTime = DateTime.Now.ToString("yyyy年MM月dd日 HH:mm:ss");
+			if (!string.IsNullOrEmpty(timerDuration))
+			{
+				checkInTime += $" ({timerDuration})";
+			}
 			_project.CheckInTimes.Add(checkInTime);
 			UpdateUI();
 			SaveData();
+			
+			// 重置计时数据
+			_elapsedTime = TimeSpan.Zero;
+			TimerLabel.Text = "00:00:00";
 			
 			// 如果首次完成目标，播放成功动画和音效
 			if (_project.IsCompleted && !wasCompleted)
@@ -216,6 +309,102 @@ public partial class ProjectDetailPage : ContentPage
 		if (_project != null)
 		{
 			await Shell.Current.Navigation.PushAsync(new CheckInDetailPage(_project));
+		}
+	}
+
+	private async void OnTimerButtonClicked(object? sender, EventArgs e)
+	{
+		// 添加震动反馈
+		try
+		{
+			if (Vibration.Default.IsSupported)
+			{
+				Vibration.Default.Vibrate(TimeSpan.FromMilliseconds(100));
+			}
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"震动失败: {ex.Message}");
+		}
+		
+		if (_isTimerRunning)
+		{
+			StopTimer();
+		}
+		else
+		{
+			StartTimer();
+		}
+	}
+
+	private void StartTimer()
+	{
+		_isTimerRunning = true;
+		_timerStartTime = DateTime.Now;
+		_elapsedTime = TimeSpan.Zero;
+		
+		TimerButton.Text = "停止计时";
+		TimerButton.BackgroundColor = Colors.Red;
+		TimerLabel.IsVisible = true;
+		TimerLabel.Text = "00:00:00";
+		
+		_timer = new System.Timers.Timer(100);
+		_timer.Elapsed += (s, e) =>
+		{
+			_elapsedTime = DateTime.Now - _timerStartTime;
+			MainThread.BeginInvokeOnMainThread(() =>
+			{
+				TimerLabel.Text = FormatTime(_elapsedTime);
+			});
+		};
+		_timer.Start();
+		
+		// 更新UI状态
+		UpdateUI();
+	}
+
+	private void StopTimer()
+	{
+		_isTimerRunning = false;
+		
+		if (_timer != null)
+		{
+			_timer.Stop();
+			_timer.Dispose();
+			_timer = null;
+		}
+		
+		TimerButton.Text = "开始计时";
+		TimerButton.BackgroundColor = Color.FromArgb("#4CAF50");
+		
+		// 更新UI状态
+		UpdateUI();
+	}
+
+	private string FormatTime(TimeSpan timeSpan)
+	{
+		int hours = timeSpan.Hours;
+		int minutes = timeSpan.Minutes;
+		int seconds = timeSpan.Seconds;
+		
+		return $"{hours:D2}:{minutes:D2}:{seconds:D2}";
+	}
+
+	protected override void OnDisappearing()
+	{
+		base.OnDisappearing();
+		
+		if (_isTimerRunning)
+		{
+			StopTimer();
+		}
+		
+		// 停止时间更新定时器
+		if (_timeUpdateTimer != null)
+		{
+			_timeUpdateTimer.Stop();
+			_timeUpdateTimer.Dispose();
+			_timeUpdateTimer = null;
 		}
 	}
 }
