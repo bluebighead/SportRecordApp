@@ -67,6 +67,7 @@ public partial class CheckInDetailPage : ContentPage
 				CheckInTimesList.IsVisible = false;
 				CalendarView.IsVisible = true;
 				ViewToggleButton.Text = "切换到列表视图";
+				ChartButton.IsVisible = false;
 				GenerateCalendar();
 			}
 			else
@@ -74,7 +75,16 @@ public partial class CheckInDetailPage : ContentPage
 				CheckInTimesList.IsVisible = true;
 				CalendarView.IsVisible = false;
 				ViewToggleButton.Text = "切换到日历视图";
+				ChartButton.IsVisible = _project?.Name == "平板支撑";
 			}
+		}
+		else
+		{
+			// 默认显示列表视图
+			CheckInTimesList.IsVisible = true;
+			CalendarView.IsVisible = false;
+			ViewToggleButton.Text = "切换到日历视图";
+			ChartButton.IsVisible = _project?.Name == "平板支撑";
 		}
 	}
 
@@ -115,6 +125,7 @@ public partial class CheckInDetailPage : ContentPage
 			CheckInTimesList.IsVisible = false;
 			CalendarView.IsVisible = true;
 			ViewToggleButton.Text = "切换到列表视图";
+			ChartButton.IsVisible = false;
 			GenerateCalendar();
 		}
 		else
@@ -122,6 +133,7 @@ public partial class CheckInDetailPage : ContentPage
 			CheckInTimesList.IsVisible = true;
 			CalendarView.IsVisible = false;
 			ViewToggleButton.Text = "切换到日历视图";
+			ChartButton.IsVisible = _project?.Name == "平板支撑";
 		}
 		
 		// 保存视图状态
@@ -367,6 +379,14 @@ public partial class CheckInDetailPage : ContentPage
 		catch (Exception ex)
 		{
 			await DisplayAlertAsync("分享失败", $"分享文件时出错: {ex.Message}", "确定");
+		}
+	}
+
+	private async void OnChartButtonClicked(object? sender, EventArgs e)
+	{
+		if (_project != null)
+		{
+			await Navigation.PushAsync(new ChartPage(_project));
 		}
 	}
 }

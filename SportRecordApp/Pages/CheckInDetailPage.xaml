@@ -56,15 +56,26 @@
                 FontSize="18"
                 TextColor="#E0E0E0"
                 HorizontalOptions="Center" />
-            <Button 
-                x:Name="ViewToggleButton"
-                Text="切换到日历视图"
-                BackgroundColor="#FFA726"
-                TextColor="White"
-                FontSize="14"
+            <HorizontalStackLayout 
                 HorizontalOptions="Center"
-                Padding="10, 5, 10, 5"
-                Clicked="OnViewToggleClicked" />
+                Spacing="10">
+                <Button 
+                    x:Name="ViewToggleButton"
+                    Text="切换到日历视图"
+                    BackgroundColor="#FFA726"
+                    TextColor="White"
+                    FontSize="14"
+                    Padding="10, 5, 10, 5"
+                    Clicked="OnViewToggleClicked" />
+                <Button 
+                    x:Name="ChartButton"
+                    Text="折线图"
+                    BackgroundColor="#2196F3"
+                    TextColor="White"
+                    FontSize="14"
+                    Padding="10, 5, 10, 5"
+                    Clicked="OnChartButtonClicked" />
+            </HorizontalStackLayout>
         </VerticalStackLayout>
 
         <CollectionView 

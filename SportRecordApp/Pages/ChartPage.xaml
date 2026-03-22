@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SportRecordApp.Pages.ChartPage"
+             BackgroundColor="#FF9800"
+             Shell.NavBarIsVisible="False">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Button 
+            Grid.Row="0"
+            Text="← 返回"
+            BackgroundColor="Transparent"
+            TextColor="White"
+            FontSize="16"
+            HorizontalOptions="Start"
+            Margin="10, 10, 0, 0"
+            Clicked="OnBackClicked" />
+
+        <VerticalStackLayout 
+            Grid.Row="1"
+            Padding="20"
+            Spacing="20">
+            <Label 
+                x:Name="ProjectNameLabel"
+                FontSize="24"
+                FontAttributes="Bold"
+                TextColor="White"
+                HorizontalOptions="Center" />
+
+            <ScrollView 
+                HeightRequest="400"
+                WidthRequest="300"
+                HorizontalOptions="Center"
+                BackgroundColor="White">
+                <Label 
+                    x:Name="ChartDataLabel"
+                    FontSize="14"
+                    TextColor="Black"
+                    Padding="10"
+                    Text="图表数据加载中..." />
+            </ScrollView>
+
+            <Label 
+                x:Name="ChartInfoLabel"
+                FontSize="16"
+                TextColor="White"
+                HorizontalOptions="Center"
+                Text="点击图例查看详细数据" />
+        </VerticalStackLayout>
+    </Grid>
+
+</ContentPage>
