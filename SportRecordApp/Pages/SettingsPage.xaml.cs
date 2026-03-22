@@ -8,6 +8,7 @@ public partial class SettingsPage : ContentPage
     {
         InitializeComponent();
         DailyCheckInSwitch.IsToggled = SettingsService.GetDailyCheckInLimit();
+        AllowUndoCheckInSwitch.IsToggled = SettingsService.GetAllowUndoCheckIn();
     }
 
     protected override void OnAppearing()
@@ -24,6 +25,12 @@ public partial class SettingsPage : ContentPage
     private void OnDailyCheckInToggled(object? sender, ToggledEventArgs e)
     {
         SettingsService.SetDailyCheckInLimit(e.Value);
+        UpdateSwitchColor();
+    }
+
+    private void OnAllowUndoCheckInToggled(object? sender, ToggledEventArgs e)
+    {
+        SettingsService.SetAllowUndoCheckIn(e.Value);
         UpdateSwitchColor();
     }
 

@@ -263,7 +263,17 @@ public partial class ProjectDetailPage : ContentPage
 
 	private async void OnMenuClicked(object? sender, EventArgs e)
 	{
-		string action = await DisplayActionSheetAsync("菜单", "取消", null, "回退打卡记录", "打卡时间详情", "日历提醒");
+		bool allowUndoCheckIn = SettingsService.GetAllowUndoCheckIn();
+		
+		string action;
+		if (allowUndoCheckIn)
+		{
+			action = await DisplayActionSheetAsync("菜单", "取消", null, "回退打卡记录", "打卡时间详情", "日历提醒");
+		}
+		else
+		{
+			action = await DisplayActionSheetAsync("菜单", "取消", null, "打卡时间详情", "日历提醒");
+		}
 		
 		if (action == "回退打卡记录")
 		{

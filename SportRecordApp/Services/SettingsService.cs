@@ -41,11 +41,12 @@ public static class SettingsService
             }
             else
             {
-                // 默认设置：每天只可打卡一次默认为开启
+                // 默认设置：每天只可打卡一次默认为开启，回退打卡记录功能默认为关闭
                 _settings = new Settings
                 {
                     DailyCheckInLimit = true,
-                    HasSeenInstructions = false
+                    HasSeenInstructions = false,
+                    AllowUndoCheckIn = false
                 };
                 SaveSettings();
             }
@@ -95,10 +96,22 @@ public static class SettingsService
         _settings.HasSeenInstructions = value;
         SaveSettings();
     }
+
+    public static bool GetAllowUndoCheckIn()
+    {
+        return _settings.AllowUndoCheckIn;
+    }
+
+    public static void SetAllowUndoCheckIn(bool value)
+    {
+        _settings.AllowUndoCheckIn = value;
+        SaveSettings();
+    }
 }
 
 public class Settings
 {
     public bool DailyCheckInLimit { get; set; }
     public bool HasSeenInstructions { get; set; }
+    public bool AllowUndoCheckIn { get; set; }
 }

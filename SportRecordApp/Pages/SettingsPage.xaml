@@ -32,6 +32,26 @@
             </Grid>
         </Border>
         
+        <Border 
+            BackgroundColor="#FFFFFF" 
+            StrokeShape="RoundRectangle 10" 
+            Padding="20" 
+            Margin="0, 0, 0, 20">
+            <Grid ColumnDefinitions="*,auto" ColumnSpacing="20" VerticalOptions="Center">
+                <Label 
+                    Text="回退打卡记录功能" 
+                    FontSize="18" 
+                    TextColor="#FF9800" 
+                    VerticalOptions="Center" />
+                <Switch 
+                    x:Name="AllowUndoCheckInSwitch" 
+                    IsToggled="True" 
+                    VerticalOptions="Center" 
+                    Toggled="OnAllowUndoCheckInToggled" 
+                    HorizontalOptions="End" />
+            </Grid>
+        </Border>
+        
         <Label 
             Text="数据已自动备份，每次打开应用时自动恢复" 
             FontSize="14" 
