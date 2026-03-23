@@ -24,14 +24,31 @@ public partial class SettingsPage : ContentPage
 
     private void OnDailyCheckInToggled(object? sender, ToggledEventArgs e)
     {
+        Vibrate();
         SettingsService.SetDailyCheckInLimit(e.Value);
         UpdateSwitchColor();
     }
 
     private void OnAllowUndoCheckInToggled(object? sender, ToggledEventArgs e)
     {
+        Vibrate();
         SettingsService.SetAllowUndoCheckIn(e.Value);
         UpdateSwitchColor();
+    }
+
+    private void Vibrate()
+    {
+        try
+        {
+            if (Vibration.Default.IsSupported)
+            {
+                Vibration.Default.Vibrate(TimeSpan.FromMilliseconds(100));
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"震动失败: {ex.Message}");
+        }
     }
 
     private void UpdateSwitchColor()

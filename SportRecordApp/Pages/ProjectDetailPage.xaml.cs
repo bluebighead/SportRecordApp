@@ -268,11 +268,11 @@ public partial class ProjectDetailPage : ContentPage
 		string action;
 		if (allowUndoCheckIn)
 		{
-			action = await DisplayActionSheetAsync("菜单", "取消", null, "回退打卡记录", "打卡时间详情", "日历提醒");
+			action = await DisplayActionSheetAsync("菜单", "取消", null, "回退打卡记录", "打卡时间详情", "日历提醒", "定时提醒");
 		}
 		else
 		{
-			action = await DisplayActionSheetAsync("菜单", "取消", null, "打卡时间详情", "日历提醒");
+			action = await DisplayActionSheetAsync("菜单", "取消", null, "打卡时间详情", "日历提醒", "定时提醒");
 		}
 		
 		if (action == "回退打卡记录")
@@ -286,6 +286,10 @@ public partial class ProjectDetailPage : ContentPage
 		else if (action == "日历提醒")
 		{
 			await SetCalendarReminder();
+		}
+		else if (action == "定时提醒")
+		{
+			await ShowTimerReminder();
 		}
 	}
 
@@ -301,6 +305,14 @@ public partial class ProjectDetailPage : ContentPage
 		catch (Exception ex)
 		{
 			await DisplayAlertAsync("错误", $"添加日历提醒失败: {ex.Message}", "确定");
+		}
+	}
+
+	private async Task ShowTimerReminder()
+	{
+		if (_project != null)
+		{
+			await Shell.Current.Navigation.PushAsync(new TimerReminderPage(_project));
 		}
 	}
 
@@ -416,5 +428,11 @@ public partial class ProjectDetailPage : ContentPage
 			_timeUpdateTimer.Dispose();
 			_timeUpdateTimer = null;
 		}
+	}
+
+	protected override void OnAppearing()
+	{
+		base.OnAppearing();
+		StartTimeUpdateTimer();
 	}
 }

@@ -28,7 +28,10 @@
                     IsToggled="True" 
                     VerticalOptions="Center" 
                     Toggled="OnDailyCheckInToggled" 
-                    HorizontalOptions="End" />
+                    HorizontalOptions="End"
+                    ThumbColor="#9C27B0"
+                    OnColor="#FF9800"
+                    OffColor="Gray" />
             </Grid>
         </Border>
         
@@ -48,7 +51,10 @@
                     IsToggled="True" 
                     VerticalOptions="Center" 
                     Toggled="OnAllowUndoCheckInToggled" 
-                    HorizontalOptions="End" />
+                    HorizontalOptions="End"
+                    ThumbColor="#9C27B0"
+                    OnColor="#FF9800"
+                    OffColor="Gray" />
             </Grid>
         </Border>
         

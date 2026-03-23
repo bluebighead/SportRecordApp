@@ -6,7 +6,7 @@ public partial class AddProjectDialog : ContentPage
 	public event EventHandler? OnCancel;
 
 	private readonly List<string> _units = new() { "天" };
-	private readonly List<string> _presets = new() { "无", "平板支撑" };
+	private readonly List<string> _presets = new() { "无", "平板支撑", "哑铃弯举" };
 	private bool _isProjectNameValid = true;
 	private bool _isTargetTimeValid = true;
 	private bool _isUnlimited = false;
@@ -130,6 +130,13 @@ public partial class AddProjectDialog : ContentPage
 		if (selectedPreset == "平板支撑")
 		{
 			ProjectNameEntry.Text = "平板支撑";
+			ProjectNameEntry.IsEnabled = false;
+			ProjectNameBorder.BackgroundColor = Color.FromArgb("#E0E0E0");
+			_isProjectNameValid = true;
+		}
+		else if (selectedPreset == "哑铃弯举")
+		{
+			ProjectNameEntry.Text = "哑铃弯举";
 			ProjectNameEntry.IsEnabled = false;
 			ProjectNameBorder.BackgroundColor = Color.FromArgb("#E0E0E0");
 			_isProjectNameValid = true;

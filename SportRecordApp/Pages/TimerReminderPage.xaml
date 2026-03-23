@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SportRecordApp.Pages.TimerReminderPage"
+             BackgroundColor="#FF9800"
+             Shell.NavBarIsVisible="False">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Button 
+            Grid.Row="0"
+            Grid.Column="0"
+            Text="← 返回"
+            BackgroundColor="Transparent"
+            TextColor="White"
+            FontSize="16"
+            HorizontalOptions="Start"
+            Margin="10, 10, 0, 0"
+            Clicked="OnBackClicked" />
+
+        <VerticalStackLayout 
+            Grid.Row="1"
+            Grid.Column="0"
+            Spacing="20"
+            Padding="20">
+            <Label 
+                x:Name="ProjectNameLabel"
+                FontSize="24"
+                FontAttributes="Bold"
+                TextColor="White"
+                HorizontalOptions="Center" />
+            <Label 
+                Text="定时提醒"
+                FontSize="18"
+                TextColor="#E0E0E0"
+                HorizontalOptions="Center" />
+            
+            <Border 
+                BackgroundColor="White"
+                StrokeShape="RoundRectangle 15"
+                Padding="20"
+                Margin="0, 20, 0, 0">
+                <Grid ColumnDefinitions="*, Auto, Auto">
+                    <VerticalStackLayout Grid.Column="0" VerticalOptions="Center">
+                        <Label 
+                            Text="定时喝水"
+                            FontSize="18"
+                            FontAttributes="Bold"
+                            TextColor="#333333" />
+                        <Label 
+                            x:Name="ReminderStatusLabel"
+                            Text="已关闭"
+                            FontSize="14"
+                            TextColor="#999999" />
+                    </VerticalStackLayout>
+                    <Switch 
+                        x:Name="DrinkWaterSwitch"
+                        Grid.Column="1"
+                        ThumbColor="#9C27B0"
+                        OnColor="#FF9800"
+                        OffColor="Gray"
+                        VerticalOptions="Center"
+                        Toggled="OnDrinkWaterSwitchToggled" />
+                    <Button 
+                        Grid.Column="2" 
+                        Text="⋮" 
+                        FontSize="24" 
+                        FontAttributes="Bold" 
+                        TextColor="#666666" 
+                        BackgroundColor="Transparent" 
+                        WidthRequest="40" 
+                        HeightRequest="40" 
+                        Padding="0" 
+                        Clicked="OnMenuButtonClicked" 
+                        VerticalOptions="Center" />
+                </Grid>
+            </Border>
+        </VerticalStackLayout>
+
+        <Grid 
+            x:Name="DialogOverlay"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            BackgroundColor="#80000000"
+            IsVisible="False">
+            <Border 
+                BackgroundColor="White"
+                StrokeShape="RoundRectangle 15"
+                Padding="20"
+                WidthRequest="300"
+                VerticalOptions="Center"
+                HorizontalOptions="Center">
+                <VerticalStackLayout Spacing="15">
+                    <Label 
+                        Text="定时设置"
+                        FontSize="20"
+                        FontAttributes="Bold"
+                        TextColor="#333333"
+                        HorizontalOptions="Center" />
+                    <Label 
+                        Text="请输入提醒间隔时间"
+                        FontSize="14"
+                        TextColor="#666666"
+                        HorizontalOptions="Center" />
+                    <Grid ColumnDefinitions="3*, *">
+                        <Entry 
+                            x:Name="TimeEntry"
+                            Grid.Column="0"
+                            Placeholder="输入时间"
+                            Keyboard="Numeric"
+                            FontSize="16"
+                            HorizontalOptions="Fill" />
+                        <Picker 
+                            x:Name="UnitPicker"
+                            Grid.Column="1"
+                            FontSize="14"
+                            HorizontalOptions="Fill"
+                            Margin="5,0,0,0"
+                            SelectedIndexChanged="OnUnitPickerSelectedIndexChanged">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                    <x:String>默认</x:String>
+                                    <x:String>分钟</x:String>
+                                    <x:String>小时</x:String>
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                    </Grid>
+                    <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
+                        <Button 
+                            Grid.Column="0"
+                            Text="取消"
+                            BackgroundColor="#CCCCCC"
+                            TextColor="Black"
+                            Clicked="OnDialogCancelClicked" />
+                        <Button 
+                            Grid.Column="1"
+                            Text="确定"
+                            BackgroundColor="#FF9800"
+                            TextColor="White"
+                            Clicked="OnDialogConfirmClicked" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+    </Grid>
+</ContentPage>
