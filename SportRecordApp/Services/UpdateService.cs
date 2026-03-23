@@ -8,7 +8,8 @@ public static class UpdateService
     private const string GitHubOwner = "bluebighead";
     private const string GitHubRepo = "SportRecordApp";
     private const string GitHubApiUrl = $"https://api.github.com/repos/{GitHubOwner}/{GitHubRepo}/releases/latest";
-    private const string CurrentVersion = "1.0.3";
+
+    private static string CurrentVersion => AppInfo.VersionString;
 
     public static async Task<UpdateInfo?> CheckForUpdateAsync()
     {

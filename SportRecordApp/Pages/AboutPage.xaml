@@ -14,7 +14,7 @@
             HorizontalOptions="Center" />
         
         <Label 
-            Text="版本 1.0.3" 
+            Text="版本 1.0.5" 
             FontSize="20" 
             TextColor="White" 
             HorizontalOptions="Center" />

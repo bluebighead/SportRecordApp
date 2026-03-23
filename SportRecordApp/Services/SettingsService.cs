@@ -10,19 +10,6 @@ public static class SettingsService
 
     static SettingsService()
     {
-        // 清除旧的设置文件，强制使用默认值
-        try
-        {
-            if (File.Exists(_settingsFile))
-            {
-                File.Delete(_settingsFile);
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"清除旧设置失败: {ex.Message}");
-        }
-        
         LoadSettings();
     }
 
@@ -107,6 +94,89 @@ public static class SettingsService
         _settings.AllowUndoCheckIn = value;
         SaveSettings();
     }
+
+    public static bool GetHeartRateBroadcastEnabled()
+    {
+        return _settings.HeartRateBroadcastEnabled;
+    }
+
+    public static void SetHeartRateBroadcastEnabled(bool value)
+    {
+        _settings.HeartRateBroadcastEnabled = value;
+        SaveSettings();
+    }
+
+    public static string GetLastConnectedDeviceAddress()
+    {
+        return _settings.LastConnectedDeviceAddress;
+    }
+
+    public static void SetLastConnectedDeviceAddress(string value)
+    {
+        _settings.LastConnectedDeviceAddress = value;
+        SaveSettings();
+    }
+
+    public static string GetLastConnectedDeviceName()
+    {
+        return _settings.LastConnectedDeviceName;
+    }
+
+    public static void SetLastConnectedDeviceName(string value)
+    {
+        _settings.LastConnectedDeviceName = value;
+        SaveSettings();
+    }
+
+    public static void ClearLastConnectedDevice()
+    {
+        _settings.LastConnectedDeviceAddress = string.Empty;
+        _settings.LastConnectedDeviceName = string.Empty;
+        SaveSettings();
+    }
+
+    public static List<DeviceHistoryItem> GetDeviceHistory()
+    {
+        return _settings.DeviceHistory.OrderByDescending(d => d.LastConnectedTime).ToList();
+    }
+
+    public static void AddDeviceToHistory(string deviceName, string deviceAddress)
+    {
+        var existingDevice = _settings.DeviceHistory.FirstOrDefault(d => d.DeviceAddress == deviceAddress);
+        if (existingDevice != null)
+        {
+            existingDevice.ConnectCount++;
+            existingDevice.LastConnectedTime = DateTime.Now;
+            existingDevice.DeviceName = deviceName;
+        }
+        else
+        {
+            _settings.DeviceHistory.Add(new DeviceHistoryItem
+            {
+                DeviceName = deviceName,
+                DeviceAddress = deviceAddress,
+                ConnectCount = 1,
+                LastConnectedTime = DateTime.Now
+            });
+        }
+        SaveSettings();
+    }
+
+    public static void RemoveDeviceFromHistory(string deviceAddress)
+    {
+        var device = _settings.DeviceHistory.FirstOrDefault(d => d.DeviceAddress == deviceAddress);
+        if (device != null)
+        {
+            _settings.DeviceHistory.Remove(device);
+            SaveSettings();
+        }
+    }
+
+    public static void ClearDeviceHistory()
+    {
+        _settings.DeviceHistory.Clear();
+        SaveSettings();
+    }
 }
 
 public class Settings
@@ -114,4 +184,16 @@ public class Settings
     public bool DailyCheckInLimit { get; set; }
     public bool HasSeenInstructions { get; set; }
     public bool AllowUndoCheckIn { get; set; }
+    public bool HeartRateBroadcastEnabled { get; set; }
+    public string LastConnectedDeviceAddress { get; set; } = string.Empty;
+    public string LastConnectedDeviceName { get; set; } = string.Empty;
+    public List<DeviceHistoryItem> DeviceHistory { get; set; } = new();
+}
+
+public class DeviceHistoryItem
+{
+    public string DeviceName { get; set; } = string.Empty;
+    public string DeviceAddress { get; set; } = string.Empty;
+    public int ConnectCount { get; set; } = 0;
+    public DateTime LastConnectedTime { get; set; } = DateTime.Now;
 }

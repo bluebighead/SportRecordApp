@@ -37,7 +37,7 @@
                 TextColor="White"
                 HorizontalOptions="Center" />
             <Label 
-                Text="定时提醒"
+                Text="多功能设置"
                 FontSize="18"
                 TextColor="#E0E0E0"
                 HorizontalOptions="Center" />
@@ -79,6 +79,47 @@
                         HeightRequest="40" 
                         Padding="0" 
                         Clicked="OnMenuButtonClicked" 
+                        VerticalOptions="Center" />
+                </Grid>
+            </Border>
+            
+            <Border 
+                BackgroundColor="White"
+                StrokeShape="RoundRectangle 15"
+                Padding="20"
+                Margin="0, 10, 0, 0">
+                <Grid ColumnDefinitions="*, Auto, Auto">
+                    <VerticalStackLayout Grid.Column="0" VerticalOptions="Center">
+                        <Label 
+                            Text="心率广播"
+                            FontSize="18"
+                            FontAttributes="Bold"
+                            TextColor="#333333" />
+                        <Label 
+                            x:Name="HeartRateStatusLabel"
+                            Text="已关闭"
+                            FontSize="14"
+                            TextColor="#999999" />
+                    </VerticalStackLayout>
+                    <Switch 
+                        x:Name="HeartRateSwitch"
+                        Grid.Column="1"
+                        ThumbColor="#9C27B0"
+                        OnColor="#FF9800"
+                        OffColor="Gray"
+                        VerticalOptions="Center"
+                        Toggled="OnHeartRateSwitchToggled" />
+                    <Button 
+                        Grid.Column="2" 
+                        Text="⋮" 
+                        FontSize="24" 
+                        FontAttributes="Bold" 
+                        TextColor="#666666" 
+                        BackgroundColor="Transparent" 
+                        WidthRequest="40" 
+                        HeightRequest="40" 
+                        Padding="0" 
+                        Clicked="OnHeartRateMenuButtonClicked" 
                         VerticalOptions="Center" />
                 </Grid>
             </Border>
@@ -146,6 +187,197 @@
                             BackgroundColor="#FF9800"
                             TextColor="White"
                             Clicked="OnDialogConfirmClicked" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+
+        <Grid 
+            x:Name="DeviceDialogOverlay"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            BackgroundColor="#80000000"
+            IsVisible="False">
+            <Border 
+                BackgroundColor="White"
+                StrokeShape="RoundRectangle 15"
+                Padding="20"
+                WidthRequest="320"
+                VerticalOptions="Center"
+                HorizontalOptions="Center">
+                <VerticalStackLayout Spacing="15">
+                    <Label 
+                        Text="搜索设备"
+                        FontSize="20"
+                        FontAttributes="Bold"
+                        TextColor="#333333"
+                        HorizontalOptions="Center" />
+                    <Label 
+                        x:Name="ScanningStatusLabel"
+                        Text="正在搜索..."
+                        FontSize="14"
+                        TextColor="#666666"
+                        HorizontalOptions="Center" />
+                    <CollectionView 
+                        x:Name="DeviceListView"
+                        HeightRequest="200"
+                        SelectionMode="Single"
+                        SelectionChanged="OnDeviceListViewSelectionChanged">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="Auto, *" Padding="10">
+                                    <RadioButton 
+                                        Grid.Column="0"
+                                        GroupName="DeviceGroup"
+                                        VerticalOptions="Center"
+                                        IsChecked="{Binding IsSelected}" />
+                                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Margin="10,0,0,0">
+                                        <Label 
+                                            Text="{Binding Name}"
+                                            FontSize="16"
+                                            TextColor="#333333" />
+                                        <Label 
+                                            Text="{Binding Address}"
+                                            FontSize="12"
+                                            TextColor="#999999" />
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                    <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
+                        <Button 
+                            Grid.Column="0"
+                            Text="取消"
+                            BackgroundColor="#CCCCCC"
+                            TextColor="Black"
+                            Clicked="OnDeviceDialogCancelClicked" />
+                        <Button 
+                            Grid.Column="1"
+                            Text="确定"
+                            BackgroundColor="#FF9800"
+                            TextColor="White"
+                            Clicked="OnDeviceDialogConfirmClicked" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+
+        <Grid 
+            x:Name="HeartRateMenuOverlay"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            BackgroundColor="Transparent"
+            IsVisible="False">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnHeartRateMenuOverlayTapped" />
+            </Grid.GestureRecognizers>
+            <Border 
+                BackgroundColor="White"
+                StrokeShape="RoundRectangle 10"
+                Padding="5"
+                WidthRequest="160"
+                VerticalOptions="Start"
+                HorizontalOptions="End"
+                Margin="0, 280, 20, 0">
+                <VerticalStackLayout Spacing="5">
+                    <Button 
+                        Text="搜索设备"
+                        BackgroundColor="Transparent"
+                        TextColor="#333333"
+                        FontSize="14"
+                        HorizontalOptions="Fill"
+                        Clicked="OnSearchDeviceMenuClicked" />
+                    <Button 
+                        Text="历史设备"
+                        BackgroundColor="Transparent"
+                        TextColor="#333333"
+                        FontSize="14"
+                        HorizontalOptions="Fill"
+                        Clicked="OnHistoryDeviceMenuClicked" />
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+
+        <Grid 
+            x:Name="HistoryDeviceOverlay"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            BackgroundColor="#80000000"
+            IsVisible="False">
+            <Border 
+                BackgroundColor="White"
+                StrokeShape="RoundRectangle 15"
+                Padding="20"
+                WidthRequest="320"
+                VerticalOptions="Center"
+                HorizontalOptions="Center">
+                <VerticalStackLayout Spacing="15">
+                    <Label 
+                        Text="历史设备"
+                        FontSize="20"
+                        FontAttributes="Bold"
+                        TextColor="#333333"
+                        HorizontalOptions="Center" />
+                    <CollectionView 
+                        x:Name="HistoryDeviceListView"
+                        HeightRequest="200"
+                        SelectionMode="Single"
+                        SelectionChanged="OnHistoryDeviceListViewSelectionChanged">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="Auto, *, Auto" Padding="10">
+                                    <RadioButton 
+                                        Grid.Column="0"
+                                        GroupName="HistoryDeviceGroup"
+                                        VerticalOptions="Center"
+                                        IsChecked="{Binding IsSelected}" />
+                                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Margin="10,0,0,0">
+                                        <Label 
+                                            Text="{Binding DisplayName}"
+                                            FontSize="16"
+                                            TextColor="#333333" />
+                                        <Label 
+                                            Text="{Binding Address}"
+                                            FontSize="12"
+                                            TextColor="#999999" />
+                                    </VerticalStackLayout>
+                                    <Button 
+                                        Grid.Column="2" 
+                                        Text="🗑" 
+                                        FontSize="18" 
+                                        TextColor="#FF5722" 
+                                        BackgroundColor="Transparent" 
+                                        WidthRequest="36" 
+                                        HeightRequest="36" 
+                                        Padding="0"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteDeviceCommand}"
+                                        CommandParameter="{Binding}"
+                                        VerticalOptions="Center" />
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                    <Label 
+                        x:Name="HistoryEmptyLabel"
+                        Text="暂无历史设备"
+                        FontSize="14"
+                        TextColor="#999999"
+                        HorizontalOptions="Center"
+                        IsVisible="False" />
+                    <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
+                        <Button 
+                            Grid.Column="0"
+                            Text="取消"
+                            BackgroundColor="#CCCCCC"
+                            TextColor="Black"
+                            Clicked="OnHistoryDeviceCancelClicked" />
+                        <Button 
+                            Grid.Column="1"
+                            Text="连接"
+                            BackgroundColor="#FF9800"
+                            TextColor="White"
+                            Clicked="OnHistoryDeviceConnectClicked" />
                     </Grid>
                 </VerticalStackLayout>
             </Border>

@@ -268,11 +268,11 @@ public partial class ProjectDetailPage : ContentPage
 		string action;
 		if (allowUndoCheckIn)
 		{
-			action = await DisplayActionSheetAsync("菜单", "取消", null, "回退打卡记录", "打卡时间详情", "日历提醒", "定时提醒");
+			action = await DisplayActionSheetAsync("菜单", "取消", null, "回退打卡记录", "打卡时间详情", "日历提醒", "多功能设置");
 		}
 		else
 		{
-			action = await DisplayActionSheetAsync("菜单", "取消", null, "打卡时间详情", "日历提醒", "定时提醒");
+			action = await DisplayActionSheetAsync("菜单", "取消", null, "打卡时间详情", "日历提醒", "多功能设置");
 		}
 		
 		if (action == "回退打卡记录")
@@ -287,7 +287,7 @@ public partial class ProjectDetailPage : ContentPage
 		{
 			await SetCalendarReminder();
 		}
-		else if (action == "定时提醒")
+		else if (action == "多功能设置")
 		{
 			await ShowTimerReminder();
 		}
@@ -428,11 +428,56 @@ public partial class ProjectDetailPage : ContentPage
 			_timeUpdateTimer.Dispose();
 			_timeUpdateTimer = null;
 		}
+
+		// 取消订阅心率更新事件
+		HeartRateService.HeartRateUpdated -= OnHeartRateUpdated;
+		HeartRateService.ConnectionStateChanged -= OnHeartRateConnectionStateChanged;
 	}
 
 	protected override void OnAppearing()
 	{
 		base.OnAppearing();
 		StartTimeUpdateTimer();
+
+		// 检查心率广播是否开启
+		bool heartRateEnabled = SettingsService.GetHeartRateBroadcastEnabled();
+		HeartRateLayout.IsVisible = heartRateEnabled;
+
+		if (heartRateEnabled)
+		{
+			// 订阅心率更新事件
+			HeartRateService.HeartRateUpdated += OnHeartRateUpdated;
+			HeartRateService.ConnectionStateChanged += OnHeartRateConnectionStateChanged;
+
+			// 更新当前心率显示
+			if (HeartRateService.IsScanning)
+			{
+				int currentRate = HeartRateService.CurrentHeartRate;
+				HeartRateLabel.Text = currentRate > 0 ? $"{currentRate}" : "--";
+			}
+			else
+			{
+				HeartRateLabel.Text = "--";
+			}
+		}
+	}
+
+	private void OnHeartRateUpdated(object? sender, HeartRateEventArgs e)
+	{
+		MainThread.BeginInvokeOnMainThread(() =>
+		{
+			HeartRateLabel.Text = $"{e.HeartRate}";
+		});
+	}
+
+	private void OnHeartRateConnectionStateChanged(object? sender, EventArgs e)
+	{
+		MainThread.BeginInvokeOnMainThread(() =>
+		{
+			if (!HeartRateService.IsScanning)
+			{
+				HeartRateLabel.Text = "--";
+			}
+		});
 	}
 }

@@ -93,6 +93,20 @@
                         TextColor="White"
                         HorizontalOptions="Center" />
                 </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="5" x:Name="HeartRateLayout" IsVisible="False">
+                    <Label 
+                        Text="心率"
+                        FontSize="12"
+                        TextColor="#E0E0E0"
+                        HorizontalOptions="Center" />
+                    <Label 
+                        x:Name="HeartRateLabel"
+                        Text="--"
+                        FontSize="18"
+                        TextColor="White"
+                        HorizontalOptions="Center" />
+                </VerticalStackLayout>
             </HorizontalStackLayout>
             
             <Label
